@@ -1,24 +1,25 @@
 import React, { useState, useMemo } from "react";
 import useAnimeList from "./hooks/useAnimeList";
-import { css } from "@emotion/react";
 import Pagination from "./components/Pagination";
+import { PageInfo } from "./types";
 
 const Home: React.FC = () => {
     const [page, setPage] = useState<number>(1);
     const { error, loading, data } = useAnimeList({ page });
-
-    const currentPage = useMemo(() => {
-        if (!data) return 1;
-        return data?.Page.pageInfo.currentPage;
-    }, [data]);
-
-    const totalPage = useMemo(() => {
-        if (!data) return 1;
-        return data?.Page.pageInfo.total;
+    const pageInfo = useMemo<PageInfo>(() => {
+        return {
+            currentPage: data?.Page.pageInfo.currentPage || 1,
+            total: data?.Page.pageInfo.total || 1,
+            hasNextPage: data?.Page.pageInfo.hasNextPage || false,
+            lastPage: data?.Page.pageInfo.lastPage || 1,
+            perPage: data?.Page.pageInfo.perPage || 1,
+        };
     }, [data]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error </p>;
+
+    const { currentPage, total: totalPage } = pageInfo;
 
     const handlePageChange = (selected: number) => {
         setPage(selected);
@@ -57,75 +58,6 @@ const Home: React.FC = () => {
             />
         </div>
     );
-};
-
-const styles = {
-    container: css`
-        display: flex;
-        justify-content: center;
-
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            padding: 0;
-
-            li {
-                margin: 0 5px;
-                display: inline-block;
-
-                &.pagination-page {
-                    a {
-                        color: #333 !important;
-                        text-decoration: none !important;
-                        padding: 8px 16px !important;
-                        border: 1px solid #ccc !important;
-                        border-radius: 4px !important;
-
-                        &:hover {
-                            background-color: #f0f0f0 !important;
-                        }
-                    }
-                }
-
-                &.pagination-previous,
-                &.pagination-next {
-                    a {
-                        color: #333 !important;
-                        text-decoration: none !important;
-                        padding: 8px 16px !important;
-                        border: 1px solid #ccc !important;
-                        border-radius: 4px !important;
-
-                        &:hover {
-                            background-color: #f0f0f0 !important;
-                        }
-                    }
-                }
-
-                &.pagination-active {
-                    a {
-                        background-color: #333 !important;
-                        color: #fff !important;
-                    }
-                }
-
-                &.pagination-link {
-                    a {
-                        color: #333 !important;
-                        text-decoration: none !important;
-                        padding: 8px 16px !important;
-                        border: 1px solid #ccc !important;
-                        border-radius: 4px !important;
-
-                        &:hover {
-                            background-color: #f0f0f0 !important;
-                        }
-                    }
-                }
-            }
-        }
-    `,
 };
 
 export default Home;

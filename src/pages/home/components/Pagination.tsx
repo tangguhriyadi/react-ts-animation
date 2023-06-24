@@ -1,5 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css, SerializedStyles } from "@emotion/react";
+import {
+    activePageStyles,
+    nextPrevButtonStyles,
+    paginationItemStyles,
+    paginationLinkStyles,
+} from "../style/style";
 interface Props {
     totalPages: number;
     currentPage: number;
@@ -34,11 +40,9 @@ const Pagination: React.FC<Props> = (props): JSX.Element => {
 
     for (let i = startPage; i < endPage; i++) {
         const itemStyles: SerializedStyles = css`
-            display: inline-block;
-            margin-right: 5px;
-            cursor: pointer;
-            color: ${i === currentPage ? "blue" : "black"};
-            font-weight: ${i === currentPage ? "bold" : "normal"};
+            ${paginationItemStyles}
+            ${paginationLinkStyles}
+        ${i === currentPage && activePageStyles}
         `;
         paginationItems.push(
             <li
@@ -54,31 +58,25 @@ const Pagination: React.FC<Props> = (props): JSX.Element => {
         );
     }
     return (
-        <>
-            <li>
-                <button
-                    onClick={handlePreviousPage}
-                    disabled={currentPage === 1}
-                    css={css`
-                        margin-right: 5px;
-                    `}
-                >
-                    Previous
-                </button>
-            </li>
+        <div css={css`display: flex; justify-content: center; margin-top: 20px;`}>
+            <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                css={nextPrevButtonStyles}
+            >
+                Previous
+            </button>
+
             {paginationItems}
-            <li>
-                <button
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                    css={css`
-                        margin-left: 5px;
-                    `}
-                >
-                    Next
-                </button>
-            </li>
-        </>
+
+            <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                css={nextPrevButtonStyles}
+            >
+                Next
+            </button>
+        </div>
     );
 };
 
