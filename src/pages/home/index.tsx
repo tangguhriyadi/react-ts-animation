@@ -1,7 +1,9 @@
+/** @jsxImportSource @emotion/react */
 import React, { useState, useMemo } from "react";
 import useAnimeList from "./hooks/useAnimeList";
 import Pagination from "./components/Pagination";
 import { PageInfo } from "./types";
+import { homePageStyle } from "./style";
 
 const Home: React.FC = () => {
     const [page, setPage] = useState<number>(1);
@@ -39,12 +41,12 @@ const Home: React.FC = () => {
 
     return (
         <div>
-            <h1>Anime List</h1>
-            <ul>
+            <h1 css={homePageStyle.headerStyle}>Anime List</h1>
+            <ul css={homePageStyle.gridStyle}>
                 {data &&
-                    data?.Page.media.map((anime) => (
+                    data?.Page.media.map((anime: any) => (
                         <li key={anime.id}>
-                            <img src={anime.coverImage.medium} alt="" />
+                            <img src={anime.coverImage.large} alt="" />
                             <div>{anime.title.romaji}</div>
                         </li>
                     ))}

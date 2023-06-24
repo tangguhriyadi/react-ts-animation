@@ -28,6 +28,7 @@ const useAnimeList = (props: Props) => {
                         }
                         coverImage {
                             medium
+                            large
                         }
                     }
                 }
