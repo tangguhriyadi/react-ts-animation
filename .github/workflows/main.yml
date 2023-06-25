@@ -47,3 +47,4 @@ jobs:
             docker stop ${{ vars.CONTAINER_NAME }} || true && docker container rm ${{vars.CONTAINER_NAME}} || true && docker image rm -f tangguhriyadi/${{ vars.IMAGE_NAME }} || true
             docker pull tangguhriyadi/${{  vars.IMAGE_NAME  }}:latest
             docker run -d -p 5173:5173 --name ${{ vars.CONTAINER_NAME }} tangguhriyadi/${{ vars.IMAGE_NAME }}:latest
+          '
