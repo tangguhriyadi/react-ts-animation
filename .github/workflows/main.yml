@@ -29,7 +29,7 @@ jobs:
 
   deployment: 
     needs: build
-    environment: develop
+    environment: master
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 
