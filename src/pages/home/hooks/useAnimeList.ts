@@ -1,45 +1,19 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Response } from "../types";
+import { GET_ANIME_LIST } from "../../../utils/queries";
 
-type Props = {
+interface Props {
     page: number;
 };
 
 const useAnimeList = (props: Props) => {
     const { page } = props;
 
-    const { loading, error, data } = useQuery<Response>(
-        gql`
-            query ($page: Int) {
-                Page(page: $page, perPage: 10) {
-                    pageInfo {
-                        total
-                        perPage
-                        currentPage
-                        lastPage
-                        hasNextPage
-                    }
-                    media(type: ANIME) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                        }
-                        coverImage {
-                            medium
-                            large
-                        }
-                    }
-                }
-            }
-        `,
-        {
-            variables: {
-                page,
-            },
-        }
-    );
+    const { loading, error, data } = useQuery<Response>(GET_ANIME_LIST, {
+        variables: {
+            page,
+        },
+    });
 
     return { loading, error, data };
 };

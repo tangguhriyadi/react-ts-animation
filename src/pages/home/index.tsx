@@ -4,6 +4,7 @@ import useAnimeList from "./hooks/useAnimeList";
 import Pagination from "./components/Pagination";
 import { PageInfo } from "./types";
 import { homePageStyle } from "./style";
+import {useNavigate} from "react-router-dom"
 
 const Home: React.FC = () => {
     const [page, setPage] = useState<number>(1);
@@ -17,6 +18,7 @@ const Home: React.FC = () => {
             perPage: data?.Page.pageInfo.perPage || 1,
         };
     }, [data]);
+    const navigate = useNavigate()
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error </p>;
@@ -45,7 +47,7 @@ const Home: React.FC = () => {
             <ul css={homePageStyle.gridStyle}>
                 {data &&
                     data?.Page.media.map((anime: any) => (
-                        <li key={anime.id}>
+                        <li key={anime.id} onClick={() => navigate(`/anime-detail/${anime.id}`)}>
                             <img src={anime.coverImage.large} alt="" />
                             <div>{anime.title.romaji}</div>
                         </li>

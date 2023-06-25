@@ -18,6 +18,7 @@ export const homePageStyle = {
                 height: 300px;
                 object-fit: cover;
                 border-radius: 8px;
+                cursor: pointer;
             }
 
             div {
