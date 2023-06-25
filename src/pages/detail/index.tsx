@@ -2,7 +2,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import useAnimeDetail from "./hooks/useAnimeDetail";
-import { css } from "@emotion/react";
+import { css, SerializedStyles } from "@emotion/react";
 
 const AnimeDetail: React.FC<{}> = () => {
     const params = useParams<{ id: string }>();
@@ -39,13 +39,15 @@ const AnimeDetail: React.FC<{}> = () => {
     );
 };
 
-const style = css`
+const style: SerializedStyles = css`
     .img-container {
-        max-width: 100%;
+        width: 100%;
         height: auto;
         img {
-            max-width: 100%;
+            width: 100%;
             height: auto;
+            max-height:450px;
+            object-fit: fill;
         }
     }
     .detail {
