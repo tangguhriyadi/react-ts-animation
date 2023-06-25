@@ -5,7 +5,7 @@ import {
     nextPrevButtonStyles,
     paginationItemStyles,
     paginationLinkStyles,
-} from "../style/style";
+} from "./style";
 interface Props {
     totalPages: number;
     currentPage: number;
