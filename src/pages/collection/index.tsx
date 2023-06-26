@@ -16,16 +16,12 @@ const Collection: React.FC<{}> = () => {
     const handleCloseModal = (): void => {
         setIsOpen(false);
     };
-    const dataCollection: any[] = [
-        // {
-        //     id: 1,
-        //     title: "collection1",
-        // },
-    ];
+    const existingStorage: string | null = localStorage.getItem("collection");
+    const dataCollection = existingStorage ? JSON.parse(existingStorage) : [];
     const renderCollection = useCallback((): JSX.Element => {
         return (
-            <div css={style.gridStyle}>
-                <ul>
+            <div>
+                <ul css={style.gridStyle}>
                     {dataCollection &&
                         dataCollection.map((collection: any) => (
                             <li key={collection.id}>
