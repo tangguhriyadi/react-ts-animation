@@ -20,7 +20,7 @@ function App() {
                         />
                         <Route path="/collection" element={<Collection />} />
                         <Route
-                            path="/collection/:id"
+                            path="/collection/:title"
                             element={<CollectionDetail />}
                         />
                     </Routes>

@@ -2,11 +2,9 @@
 import { css, SerializedStyles } from "@emotion/react";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-interface FormValues {
-    title: string;
-    description: string;
-}
+import { yupResolver } from "@hookform/resolvers/yup";
+import { CollectionData, FormValues } from "../types";
+import { schema } from "../../../utils/validation";
 
 interface Props {
     onClose: () => void;
@@ -15,14 +13,34 @@ interface Props {
 const AddCollectionForm: React.FC<Props> = (props) => {
     const { onClose } = props;
     const onSubmit: SubmitHandler<FormValues> = (data) => {
-        console.log(data);
+        saveToLocalStorage(data);
         onClose();
     };
+    const saveToLocalStorage = (data: CollectionData): void => {
+        const existingStorage: string | null = localStorage.getItem("collection");
+        const parsedLocalStorage = existingStorage
+            ? JSON.parse(existingStorage)
+            : [];
+        let array: CollectionData[] = [];
+        if (parsedLocalStorage.length === 0) {
+            data.data = [];
+            array.push(data);
+            localStorage.setItem("collection", JSON.stringify(array));
+        } else {
+            array.push(...parsedLocalStorage);
+            data.data = [];
+            array.push(data);
+            localStorage.setItem("collection", JSON.stringify(array));
+        }
+    };
+
     const {
         handleSubmit,
         register,
         formState: { errors },
-    } = useForm<FormValues>();
+    } = useForm<FormValues>({
+        resolver: yupResolver(schema),
+    });
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)} css={style}>
@@ -35,14 +53,12 @@ const AddCollectionForm: React.FC<Props> = (props) => {
                     <label htmlFor="title">Title</label>
                     <input
                         type="text"
-                        {...register("title", { required: true })}
+                        {...register("title")}
                         id="title"
                         placeholder="Title"
-                        maxLength={10}
                     />
-                    {errors.title && (
-                        <span className="error">Name is required</span>
-                    )}
+
+                    <span className="error">{errors.title?.message}</span>
                 </div>
                 <div
                     className="container-input"
@@ -52,15 +68,11 @@ const AddCollectionForm: React.FC<Props> = (props) => {
                 >
                     <label htmlFor="description">Description</label>
                     <input
-                        {...register("description", {
-                            required: true,
-                        })}
+                        {...register("description")}
                         id="description"
                         placeholder="Description"
                     />
-                    {errors.description?.type === "required" && (
-                        <span className="error">description is required</span>
-                    )}
+                    <span className="error">{errors.description?.message}</span>
                 </div>
                 <button className="button-submit" type="submit">
                     Submit
