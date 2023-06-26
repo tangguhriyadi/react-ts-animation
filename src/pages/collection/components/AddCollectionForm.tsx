@@ -3,36 +3,12 @@ import { css, SerializedStyles } from "@emotion/react";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-
-interface FormValues {
-    title: string;
-    description: string;
-}
+import { CollectionData, FormValues } from "../types";
+import { schema } from "../../../utils/validation";
 
 interface Props {
     onClose: () => void;
 }
-
-const notDuplicatTitle = (value: string) => {
-    const existingStorage: string | null = localStorage.getItem("collection");
-    const parsedLocalStorage = existingStorage ? JSON.parse(existingStorage) : [];
-    const isExist:boolean = parsedLocalStorage.some((data: FormValues) => data.title === value);
-    if(isExist){
-        return false
-    }
-    return true
-};
-
-const schema = yup
-    .object({
-        title: yup
-            .string()
-            .required()
-            .test("is-valid", "Title already exist", notDuplicatTitle),
-        description: yup.string().required(),
-    })
-    .required();
 
 const AddCollectionForm: React.FC<Props> = (props) => {
     const { onClose } = props;
@@ -40,17 +16,19 @@ const AddCollectionForm: React.FC<Props> = (props) => {
         saveToLocalStorage(data);
         onClose();
     };
-    const saveToLocalStorage = (data: FormValues): void => {
-        let existingStorage: string | null = localStorage.getItem("collection");
-        let parsedLocalStorage = existingStorage
+    const saveToLocalStorage = (data: CollectionData): void => {
+        const existingStorage: string | null = localStorage.getItem("collection");
+        const parsedLocalStorage = existingStorage
             ? JSON.parse(existingStorage)
             : [];
-        let array: FormValues[] = [];
+        let array: CollectionData[] = [];
         if (parsedLocalStorage.length === 0) {
+            data.data = [];
             array.push(data);
             localStorage.setItem("collection", JSON.stringify(array));
         } else {
             array.push(...parsedLocalStorage);
+            data.data = [];
             array.push(data);
             localStorage.setItem("collection", JSON.stringify(array));
         }
@@ -79,9 +57,8 @@ const AddCollectionForm: React.FC<Props> = (props) => {
                         id="title"
                         placeholder="Title"
                     />
-                   
-                        <span className="error">{errors.title?.message}</span>
-                    
+
+                    <span className="error">{errors.title?.message}</span>
                 </div>
                 <div
                     className="container-input"

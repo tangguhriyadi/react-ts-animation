@@ -5,8 +5,11 @@ import { css } from "@emotion/react";
 import Book from "../../assets/book.png";
 import Modal from "../../components/Modal";
 import AddCollectionForm from "./components/AddCollectionForm";
+import { useNavigate } from "react-router-dom";
 
 const Collection: React.FC<{}> = () => {
+    const navigate = useNavigate()
+
     const [isOpen, setIsOpen] = useState(false);
 
     const handleOpenModal = (): void => {
@@ -16,15 +19,18 @@ const Collection: React.FC<{}> = () => {
     const handleCloseModal = (): void => {
         setIsOpen(false);
     };
+
     const existingStorage: string | null = localStorage.getItem("collection");
+
     const dataCollection = existingStorage ? JSON.parse(existingStorage) : [];
+    console.log(dataCollection)
     const renderCollection = useCallback((): JSX.Element => {
         return (
             <div>
                 <ul css={style.gridStyle}>
                     {dataCollection &&
                         dataCollection.map((collection: any) => (
-                            <li key={collection.id}>
+                            <li key={collection.title} onClick={() => navigate(`/collection/${collection.title}`)} >
                                 <img src={Book} alt="" />
                                 <div>{collection.title}</div>
                             </li>
@@ -40,7 +46,7 @@ const Collection: React.FC<{}> = () => {
                 <h1>Collections</h1>
                 <div css={style.buttonContainer}>
                     <button onClick={handleOpenModal} css={style.button}>
-                        Add New
+                        Add New Collection
                     </button>
                 </div>
             </div>

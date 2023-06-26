@@ -32,6 +32,7 @@ const style: SerializedStyles = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 2;
     .container {
         background-color: #fff;
         width: 400px;
@@ -39,12 +40,13 @@ const style: SerializedStyles = css`
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         h2 {
+            text-align:center;
             margin-top: 0;
             margin-bottom: 20px;
         }
         .content {
             background-color: #fff;
-            padding: 20px;
+            padding: 5px 20px 20px 20px;
             button {
                 margin-top: 20px;
                 padding: 10px 20px;

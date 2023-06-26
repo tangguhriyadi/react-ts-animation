@@ -1,5 +1,5 @@
 export interface Anime {
-    id: string;
+    id: number;
     title: {
         romaji: string;
         english: string;
