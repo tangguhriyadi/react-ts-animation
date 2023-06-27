@@ -6,8 +6,9 @@ import { Anime } from "../home/types";
 import { CollectionData } from "../collection/types";
 import DeleteIcon from "../../assets/delete.png";
 import Modal from "../../components/Modal";
-import DeleteConfirmation from "./components/DeleteConfirmation";
-import { deleteMutationLocal } from "../../utils/constant";
+
+import { deleteMutationLocal, getDataLocalStorage } from "../../utils/constant";
+import DeleteConfirmation from "../../components/DeleteConfitmation";
 
 const CollectionDetail: React.FC<{}> = () => {
     const params = useParams<{ title: string }>();
@@ -18,13 +19,9 @@ const CollectionDetail: React.FC<{}> = () => {
 
     const [selected, setSelected] = useState<number>(0);
 
-    const existingStorage: string | null = localStorage.getItem("collection");
+    const collectionData: CollectionData[] = getDataLocalStorage()
 
-    const parsedLocalStorage: CollectionData[] = existingStorage
-        ? JSON.parse(existingStorage)
-        : [];
-
-    const dataAnime: CollectionData = parsedLocalStorage.filter(
+    const dataAnime: CollectionData = collectionData.filter(
         (data: any) => data.title === params.title
     )[0];
 
@@ -45,7 +42,7 @@ const CollectionDetail: React.FC<{}> = () => {
 
     const handleDelete = (): void => {
         deleteMutationLocal({
-            data: parsedLocalStorage,
+            data: collectionData,
             collectionId: params.title,
             animeId: selected,
         });
@@ -60,7 +57,7 @@ const CollectionDetail: React.FC<{}> = () => {
                         dataAnime.data.map((anime: Anime) => (
                             <li key={anime.id}>
                                 <img
-                                    src={anime.coverImage.large}
+                                    src={anime.coverImage ? anime.coverImage.large : ""}
                                     alt=""
                                     onClick={() => handleClick(anime.id)}
                                 />

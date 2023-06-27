@@ -19,7 +19,7 @@ const Home: React.FC = () => {
 
     const { error, loading, data } = useAnimeList({ page });
 
-    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
     const handleSetDefaultState = (): void => {
         setIsChecking(false);
@@ -53,18 +53,21 @@ const Home: React.FC = () => {
 
     const handlePageChange = (selected: number): void => {
         setPage(selected);
+        handleSetDefaultState();
     };
 
     const handlePreviousPage = (): void => {
         if (currentPage > 1) {
             setPage(currentPage - 1);
         }
+        handleSetDefaultState();
     };
 
     const handleNextPage = (): void => {
         if (currentPage < totalPage) {
             setPage(currentPage + 1);
         }
+        handleSetDefaultState();
     };
 
     const collectionMutation = (anime: Anime) => {
