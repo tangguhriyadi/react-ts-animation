@@ -6,6 +6,7 @@ import {
     paginationItemStyles,
     paginationLinkStyles,
 } from "./style";
+import useResponsive from "../hooks/useResponsive";
 interface Props {
     totalPages: number;
     currentPage: number;
@@ -22,9 +23,15 @@ const Pagination: React.FC<Props> = (props): JSX.Element => {
         handleNextPage,
         handlePreviousPage,
     } = props;
+
+    const { isMobile, isTablet } = useResponsive();
+
     const paginationItems: JSX.Element[] = [];
-    const maxPaginationItems = 10;
+
+    const maxPaginationItems = isMobile ? 5 : isTablet ? 8 : 10;
+
     const halfMaxPaginationItems = Math.floor(maxPaginationItems / 2);
+
     let startPage = currentPage - halfMaxPaginationItems;
     let endPage = currentPage + halfMaxPaginationItems;
 
@@ -58,7 +65,13 @@ const Pagination: React.FC<Props> = (props): JSX.Element => {
         );
     }
     return (
-        <div css={css`display: flex; justify-content: center; margin-top: 20px;`}>
+        <div
+            css={css`
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            `}
+        >
             <button
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}

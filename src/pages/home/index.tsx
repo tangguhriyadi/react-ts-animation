@@ -9,6 +9,8 @@ import { css } from "@emotion/react";
 import Checklist from "../../assets/checklist.svg";
 import Modal from "../../components/Modal";
 import AddToCollectionForm from "./components/AddToCollectionForm";
+import DefaultImage from "../../assets/default.png";
+import { handleImageError } from "../../utils/constant";
 
 const Home: React.FC = () => {
     const [page, setPage] = useState<number>(1);
@@ -96,7 +98,7 @@ const Home: React.FC = () => {
         );
         return (
             <div className="checkbox">
-                {isChecked && <img src={Checklist} alt=""></img>}
+                {isChecked && <img src={Checklist} alt="" loading="lazy"></img>}
             </div>
         );
     };
@@ -158,8 +160,10 @@ const Home: React.FC = () => {
                             {isChecking && renderCheckBox(anime.id)}
                             <img
                                 css={isChecking && darkImage}
-                                src={anime.coverImage.large}
-                                alt=""
+                                src={anime.coverImage.large ?? DefaultImage}
+                                alt="../../assets/default.png"
+                                onError={handleImageError}
+                                loading="lazy"
                             />
                             <div>{anime.title.romaji}</div>
                         </li>

@@ -6,6 +6,7 @@ import { Anime } from "../home/types";
 import { CollectionData } from "../collection/types";
 import DeleteIcon from "../../assets/delete.png";
 import Modal from "../../components/Modal";
+import DefaultImage from "../../assets/default.png";
 
 import { deleteMutationLocal, getDataLocalStorage } from "../../utils/constant";
 import DeleteConfirmation from "../../components/DeleteConfitmation";
@@ -19,7 +20,7 @@ const CollectionDetail: React.FC<{}> = () => {
 
     const [selected, setSelected] = useState<number>(0);
 
-    const collectionData: CollectionData[] = getDataLocalStorage()
+    const collectionData: CollectionData[] = getDataLocalStorage();
 
     const dataAnime: CollectionData = collectionData.filter(
         (data: any) => data.title === params.title
@@ -31,8 +32,8 @@ const CollectionDetail: React.FC<{}> = () => {
 
     const handleClickDelete = (e: MouseEvent<HTMLImageElement>): void => {
         e.stopPropagation();
-        const id = parseInt(e.currentTarget.getAttribute('data-id') || '0', 10);
-        setSelected(id)
+        const id = parseInt(e.currentTarget.getAttribute("data-id") || "0", 10);
+        setSelected(id);
         setIsOpen(true);
     };
 
@@ -57,9 +58,14 @@ const CollectionDetail: React.FC<{}> = () => {
                         dataAnime.data.map((anime: Anime) => (
                             <li key={anime.id}>
                                 <img
-                                    src={anime.coverImage ? anime.coverImage.large : ""}
+                                    src={
+                                        anime.coverImage
+                                            ? anime.coverImage.large
+                                            : DefaultImage
+                                    }
                                     alt=""
                                     onClick={() => handleClick(anime.id)}
+                                    loading="lazy"
                                 />
                                 <img
                                     className="delete"
@@ -67,6 +73,7 @@ const CollectionDetail: React.FC<{}> = () => {
                                     alt=""
                                     data-id={anime.id}
                                     onClick={handleClickDelete}
+                                    loading="lazy"
                                 />
                                 <div className="title">
                                     {anime.title.english}

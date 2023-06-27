@@ -2,12 +2,15 @@
 import React, { useCallback, useState, MouseEvent } from "react";
 // import Sidenav from "./components/Sidenav";
 import { css } from "@emotion/react";
-import Book from "../../assets/book.png";
+import DefaultImage from "../../assets/default.png";
 import Modal from "../../components/Modal";
 import AddCollectionForm from "./components/AddCollectionForm";
 import DeleteIcon from "../../assets/delete.png";
 import { useNavigate } from "react-router-dom";
-import { deleteMutationCollectionLocal } from "../../utils/constant";
+import {
+    deleteMutationCollectionLocal,
+    handleImageError,
+} from "../../utils/constant";
 import { CollectionData } from "./types";
 import DeleteConfirmation from "../../components/DeleteConfitmation";
 
@@ -69,9 +72,11 @@ const Collection: React.FC<{}> = () => {
                                         collection.data && collection.data[0]
                                             ? collection.data[0].coverImage
                                                   .large
-                                            : Book
+                                            : DefaultImage
                                     }
-                                    alt=""
+                                    alt="../../assets/default.png"
+                                    onError={handleImageError}
+                                    loading="lazy"
                                 />
                                 <div className="title">{collection.title}</div>
                                 <img
@@ -80,6 +85,7 @@ const Collection: React.FC<{}> = () => {
                                     alt=""
                                     data-id={collection.title}
                                     onClick={handleClickDelete}
+                                    loading="lazy"
                                 />
                             </li>
                         ))}
