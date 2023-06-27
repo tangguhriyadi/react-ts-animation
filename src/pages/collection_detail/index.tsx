@@ -1,32 +1,92 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import React, { useCallback } from "react";
-import { useParams } from "react-router-dom";
+import React, { useCallback, MouseEvent, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Anime } from "../home/types";
+import { CollectionData } from "../collection/types";
+import DeleteIcon from "../../assets/delete.png";
+import Modal from "../../components/Modal";
+import DeleteConfirmation from "./components/DeleteConfirmation";
+import { deleteMutationLocal } from "../../utils/constant";
 
 const CollectionDetail: React.FC<{}> = () => {
     const params = useParams<{ title: string }>();
 
+    const navigate = useNavigate();
+
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const [selected, setSelected] = useState<number>(0);
+
     const existingStorage: string | null = localStorage.getItem("collection");
 
-    const parsedLocalStorage = existingStorage
+    const parsedLocalStorage: CollectionData[] = existingStorage
         ? JSON.parse(existingStorage)
         : [];
 
-    const dataAnime:Anime[] = parsedLocalStorage.data
+    const dataAnime: CollectionData = parsedLocalStorage.filter(
+        (data: any) => data.title === params.title
+    )[0];
+
+    const handleClick = (id: number): void => {
+        navigate(`/anime-detail/${id}`);
+    };
+
+    const handleClickDelete = (e: MouseEvent<HTMLImageElement>): void => {
+        e.stopPropagation();
+        const id = parseInt(e.currentTarget.getAttribute('data-id') || '0', 10);
+        setSelected(id)
+        setIsOpen(true);
+    };
+
+    const handleClose = (): void => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleDelete = (): void => {
+        deleteMutationLocal({
+            data: parsedLocalStorage,
+            collectionId: params.title,
+            animeId: selected,
+        });
+        setIsOpen(!isOpen);
+    };
 
     const renderCollection = useCallback((): JSX.Element => {
         return (
             <div>
                 <ul css={style.gridStyle}>
-                    {dataAnime &&
-                        dataAnime.map((anime: any) => (
-                            <li key={anime.title}>
-                                <img src={anime.coverImage.large} alt="" />
-                                <div>{anime.title}</div>
+                    {dataAnime.data &&
+                        dataAnime.data.map((anime: Anime) => (
+                            <li key={anime.id}>
+                                <img
+                                    src={anime.coverImage.large}
+                                    alt=""
+                                    onClick={() => handleClick(anime.id)}
+                                />
+                                <img
+                                    className="delete"
+                                    src={DeleteIcon}
+                                    alt=""
+                                    data-id={anime.id}
+                                    onClick={handleClickDelete}
+                                />
+                                <div className="title">
+                                    {anime.title.english}
+                                </div>
                             </li>
                         ))}
                 </ul>
+                <Modal
+                    title="Are you sure?"
+                    children={
+                        <DeleteConfirmation
+                            onClose={handleClose}
+                            handleDelete={handleDelete}
+                        />
+                    }
+                    isOpen={isOpen}
+                />
             </div>
         );
     }, [dataAnime]);
@@ -34,9 +94,9 @@ const CollectionDetail: React.FC<{}> = () => {
     return (
         <>
             <div css={style.title}>
-                <h1>{params.title}</h1> 
+                <h1>{params.title}</h1>
             </div>
-            {dataAnime && dataAnime.length > 0 && renderCollection()}
+            {dataAnime.data && dataAnime.data.length > 0 && renderCollection()}
         </>
     );
 };
@@ -59,7 +119,7 @@ const style = {
         li {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: end;
             text-align: center;
 
             img {
@@ -69,11 +129,28 @@ const style = {
                 object-fit: cover;
                 border-radius: 8px;
                 cursor: pointer;
+                position: relative;
+            }
+            .delete {
+                position: absolute;
+                z-index: 1;
+                margin: 5px;
+                width: 30px;
+                height: 30px;
+                background-color: red;
+                border-radius: 50%;
+                transition: transform 0.3s ease-in-out;
+                &:hover {
+                    transform: scale(1.1);
+                }
             }
 
             div {
                 margin-top: 10px;
                 font-weight: bold;
+            }
+            .title {
+                align-self: center;
             }
         }
 

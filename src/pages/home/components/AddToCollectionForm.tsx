@@ -59,7 +59,6 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
         currentLocalStorage.push(currentCollection);
 
         localStorage.setItem("collection", JSON.stringify(currentLocalStorage));
-        console.log(currentLocalStorage);
 
         handleSetDefaultState();
         onClose();
