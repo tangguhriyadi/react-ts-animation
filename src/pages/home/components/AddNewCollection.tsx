@@ -45,7 +45,7 @@ const AddNewCollection: React.FC<Props> = (props) => {
                 </div>
                 <span className="error">{errors.title?.message}</span>
                 <div className="container-input">
-                    <input
+                    <textarea
                         {...register("description")}
                         id="description"
                         placeholder="Description"
@@ -68,6 +68,15 @@ const style: SerializedStyles = css`
             margin-bottom: 5px;
         }
         input {
+            width: 100%;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            margin-bottom: 10px;
+        }
+        textarea {
             width: 100%;
             padding: 5px;
             font-size: 16px;

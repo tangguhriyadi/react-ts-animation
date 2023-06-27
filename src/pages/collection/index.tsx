@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useCallback, useState, MouseEvent, useMemo } from "react";
+import React, { useCallback, useState, MouseEvent } from "react";
 // import Sidenav from "./components/Sidenav";
 import { css } from "@emotion/react";
 import Book from "../../assets/book.png";
@@ -7,9 +7,9 @@ import Modal from "../../components/Modal";
 import AddCollectionForm from "./components/AddCollectionForm";
 import DeleteIcon from "../../assets/delete.png";
 import { useNavigate } from "react-router-dom";
-import DeleteConfirmation from "../collection_detail/components/DeleteConfirmation";
 import { deleteMutationCollectionLocal } from "../../utils/constant";
 import { CollectionData } from "./types";
+import DeleteConfirmation from "../../components/DeleteConfitmation";
 
 const Collection: React.FC<{}> = () => {
     const navigate = useNavigate();

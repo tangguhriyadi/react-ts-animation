@@ -27,11 +27,15 @@ export const saveToLocalStorage = (data: CollectionData): void => {
     }
 };
 
-export const deleteMutationCollectionLocal = (props: DeleteCollectionProps): void => {
+export const deleteMutationCollectionLocal = (
+    props: DeleteCollectionProps
+): void => {
     const { data, collectionId } = props;
 
-    const updatedData = data.filter((d:CollectionData) => d.title != collectionId)
-    
+    const updatedData = data.filter(
+        (d: CollectionData) => d.title != collectionId
+    );
+
     localStorage.setItem("collection", JSON.stringify(updatedData));
 };
 
@@ -50,4 +54,33 @@ export const deleteMutationLocal = (props: DeleteProps): void => {
     });
 
     localStorage.setItem("collection", JSON.stringify(updatedData));
+};
+
+export const convertNumber = (month: number | undefined): string => {
+    if (!month) return "0";
+    if (month >= 10) return month.toString();
+    return `0${month}`;
+};
+
+export const getDataLocalStorage = () => {
+    const existingStorage: string | null = localStorage.getItem("collection");
+
+    const parsedLocalStorage: CollectionData[] = existingStorage
+        ? JSON.parse(existingStorage)
+        : [];
+
+    return parsedLocalStorage;
+};
+
+export const getCollectionByAnimeName = (id: number | undefined) => {
+    const collection: CollectionData[] = getDataLocalStorage();
+
+    const filteredData = collection.filter((item) => {
+        if (item.data) {
+            return item.data.some((media) => media.id === id);
+        }
+        return false;
+    });
+
+    return filteredData;
 };

@@ -41,6 +41,10 @@ export const GET_ANIME_DETAIL = gql`
                 native
                 userPreferred
             }
+            coverImage {
+                medium
+                large
+            }
             format
             episodes
             description

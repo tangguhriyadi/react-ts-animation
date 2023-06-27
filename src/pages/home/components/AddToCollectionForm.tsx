@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, FormEvent } from "react";
 import { css, SerializedStyles } from "@emotion/react";
 import { Anime } from "../types";
 import AddNewCollection from "./AddNewCollection";
@@ -7,7 +7,7 @@ import AddNewCollection from "./AddNewCollection";
 interface Props {
     onClose: () => void;
     addToCollection: Anime[];
-    handleSetDefaultState: () => void;
+    handleSetDefaultState?: () => void;
 }
 
 const AddToCollectionForm: React.FC<Props> = (props) => {
@@ -23,44 +23,55 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
         ? JSON.parse(existingStorage)
         : [];
 
-    const [selectedItem, setSelectedItem] = useState<string>("");
+    const [selectedItem, setSelectedItem] = useState<string[]>([]);
 
-    const handleRadioChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setSelectedItem(event.target.value);
+    const handleRadioChange = (value: string) => {
+        if (selectedItem.includes(value)) {
+            setSelectedItem(selectedItem.filter((option) => option !== value));
+        } else {
+            setSelectedItem([...selectedItem, value]);
+        }
     };
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-        if (!selectedItem) {
+        if (selectedItem.length === 0) {
             setIsError(true);
             return;
         }
-        // take the collections
-        let currentCollection = parsedLocalStorage.filter(
-            (item: any) => item.title === selectedItem
-        )[0];
+        selectedItem.forEach((selected) => {
+            // take the collections
+            let currentCollection = parsedLocalStorage.filter(
+                (item: any) => item.title === selected
+            )[0];
 
-        // push the selected anime
-        currentCollection.data.push(...addToCollection);
+            // push the selected anime
+            currentCollection.data.push(...addToCollection);
 
-        //prevent duplication
-        const uniqueData = currentCollection.data.filter(
-            (data: Anime, index: number, array: Anime[]) =>
-                array.map((p) => p.id).indexOf(data.id) === index
-        );
-        currentCollection.data = uniqueData;
+            //prevent duplication
+            const uniqueData = currentCollection.data.filter(
+                (data: Anime, index: number, array: Anime[]) =>
+                    array.map((p) => p.id).indexOf(data.id) === index
+            );
+            currentCollection.data = uniqueData;
 
-        // remove the old item
-        let currentLocalStorage = parsedLocalStorage.filter(
-            (item: any) => item.title !== selectedItem
-        );
+            // remove the old item
+            let currentLocalStorage = parsedLocalStorage.filter(
+                (item: any) => item.title !== selected
+            );
 
-        // update with new item
-        currentLocalStorage.push(currentCollection);
+            // update with new item
+            currentLocalStorage.push(currentCollection);
 
-        localStorage.setItem("collection", JSON.stringify(currentLocalStorage));
+            localStorage.setItem(
+                "collection",
+                JSON.stringify(currentLocalStorage)
+            );
+        });
 
-        handleSetDefaultState();
+        if (handleSetDefaultState) {
+            handleSetDefaultState();
+        }
         onClose();
     };
 
@@ -69,28 +80,63 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
     };
 
     const renderCollectionList = (): JSX.Element => {
+        const splitIndex = Math.ceil(parsedLocalStorage.length / 2);
+        const leftOptions = parsedLocalStorage.slice(0, splitIndex);
+        const rightOptions = parsedLocalStorage.slice(splitIndex);
         return (
             <form onSubmit={handleSubmit} css={style}>
                 <h2>Available Collections</h2>
-                <div className="radio-container">
-                    {parsedLocalStorage.length > 0 ? (
-                        parsedLocalStorage.map((data: any) => (
-                            <div className="radio-item" key={data.title}>
-                                <label className="radio-label">
-                                    <input
-                                        type="radio"
-                                        name="radioButton"
-                                        value={data.title}
-                                        checked={selectedItem === data.title}
-                                        onChange={handleRadioChange}
-                                    />
-                                    {data.title}
-                                </label>
-                            </div>
-                        ))
-                    ) : (
-                        <></>
-                    )}
+                <div className="checkbox-container">
+                    <div className="column">
+                        {leftOptions.length > 0 ? (
+                            leftOptions.map((data: any) => (
+                                <div key={data.title}>
+                                    <label className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            name="radioButton"
+                                            value={data.title}
+                                            checked={selectedItem.includes(
+                                                data.title
+                                            )}
+                                            onChange={() =>
+                                                handleRadioChange(data.title)
+                                            }
+                                        />
+                                        <span className="checkbox-custom"></span>
+                                        {data.title}
+                                    </label>
+                                </div>
+                            ))
+                        ) : (
+                            <></>
+                        )}
+                    </div>
+                    <div className="column">
+                        {rightOptions.length > 0 ? (
+                            rightOptions.map((data: any) => (
+                                <div key={data.title}>
+                                    <label className="checkbox-label">
+                                        <input
+                                            type="checkbox"
+                                            name="radioButton"
+                                            value={data.title}
+                                            checked={selectedItem.includes(
+                                                data.title
+                                            )}
+                                            onChange={() =>
+                                                handleRadioChange(data.title)
+                                            }
+                                        />
+                                        <span className="checkbox-custom"></span>
+                                        {data.title}
+                                    </label>
+                                </div>
+                            ))
+                        ) : (
+                            <></>
+                        )}
+                    </div>
                 </div>
                 <button className="button-submit" type="submit">
                     Submit
@@ -98,7 +144,9 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
                 <button className="button-cancel" onClick={onClose}>
                     Cancel
                 </button>
-                {isError && <p className="error">Select one collection</p>}
+                {isError && (
+                    <p className="error">Select at least one collection</p>
+                )}
             </form>
         );
     };
@@ -132,46 +180,48 @@ const style: SerializedStyles = css`
     h2 {
         margin-bottom: 10px !important;
     }
-    .radio-container {
+    .checkbox-container {
         display: flex;
-        flex-direction: column;
-        margin-left: 10px;
-    }
-    .radio-item {
-        margin-bottom: 5px;
-    }
-    .radio-label {
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        position: relative;
-        cursor: pointer;
-        input {
-            margin-right: 10px;
-            cursor: pointer;
-        }
-        input[type="radio"] {
-            position: relative;
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            background-color: #fff;
-            border-radius: 50%;
-            outline: none;
-            border: none;
-            cursor: pointer;
-        }
+        justify-content: space-between;
+        .column {
+            width: 50%;
+            .checkbox-label {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+                cursor: pointer;
+            }
 
-        input[type="radio"]:checked::before {
-            position: absolute;
-            border-radius: 50%;
-            content: "";
-            width: 8px;
-            height: 8px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #79c142;
+            .checkbox-label input[type="checkbox"] {
+                display: none;
+            }
+
+            .checkbox-custom {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                border: 2px solid #ccc;
+                border-radius: 3px;
+                background-color: white;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+
+            .checkbox-custom::after {
+                content: "";
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                background-color: #ccc;
+                border-radius: 2px;
+                transition: background-color 0.2s;
+            }
+
+            .checkbox-label
+                input[type="checkbox"]:checked
+                ~ .checkbox-custom::after {
+                background-color: #79c142;
+            }
         }
     }
     .button-submit {
