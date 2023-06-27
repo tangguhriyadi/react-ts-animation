@@ -4,6 +4,10 @@ interface DeleteProps {
     collectionId: string | undefined;
     animeId: number;
 }
+interface DeleteCollectionProps {
+    data: CollectionData[];
+    collectionId: string | null;
+}
 
 export const saveToLocalStorage = (data: CollectionData): void => {
     const existingStorage: string | null = localStorage.getItem("collection");
@@ -21,6 +25,14 @@ export const saveToLocalStorage = (data: CollectionData): void => {
         array.push(data);
         localStorage.setItem("collection", JSON.stringify(array));
     }
+};
+
+export const deleteMutationCollectionLocal = (props: DeleteCollectionProps): void => {
+    const { data, collectionId } = props;
+
+    const updatedData = data.filter((d:CollectionData) => d.title != collectionId)
+    
+    localStorage.setItem("collection", JSON.stringify(updatedData));
 };
 
 export const deleteMutationLocal = (props: DeleteProps): void => {

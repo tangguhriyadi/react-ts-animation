@@ -21,7 +21,8 @@ export const schema = yup
         title: yup
             .string()
             .required()
-            .test("is-valid", "Title already exist", notDuplicatTitle),
+            .test("is-valid", "Title already exist", notDuplicatTitle)
+            .matches(/^[a-zA-Z0-9\s]+$/, 'Special character is not allowed'),
         description: yup.string().required(),
     })
     .required();

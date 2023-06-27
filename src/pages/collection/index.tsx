@@ -1,16 +1,24 @@
 /** @jsxImportSource @emotion/react */
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, MouseEvent, useMemo } from "react";
 // import Sidenav from "./components/Sidenav";
 import { css } from "@emotion/react";
 import Book from "../../assets/book.png";
 import Modal from "../../components/Modal";
 import AddCollectionForm from "./components/AddCollectionForm";
+import DeleteIcon from "../../assets/delete.png";
 import { useNavigate } from "react-router-dom";
+import DeleteConfirmation from "../collection_detail/components/DeleteConfirmation";
+import { deleteMutationCollectionLocal } from "../../utils/constant";
+import { CollectionData } from "./types";
 
 const Collection: React.FC<{}> = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const [isOpen, setIsOpen] = useState(false);
+
+    const [isOpenDelete, setIsOpenDelete] = useState(false);
+
+    const [selected, setSelected] = useState<string | null>("");
 
     const handleOpenModal = (): void => {
         setIsOpen(true);
@@ -20,25 +28,79 @@ const Collection: React.FC<{}> = () => {
         setIsOpen(false);
     };
 
+    const handleCloseDeleteModal = (): void => {
+        setIsOpenDelete(false);
+    };
     const existingStorage: string | null = localStorage.getItem("collection");
 
-    const dataCollection = existingStorage ? JSON.parse(existingStorage) : [];
-   
+    const dataCollection: CollectionData[] = existingStorage
+        ? JSON.parse(existingStorage)
+        : [];
+
+    const handleDelete = (): void => {
+        deleteMutationCollectionLocal({
+            data: dataCollection,
+            collectionId: selected,
+        });
+        setIsOpenDelete(!isOpenDelete);
+    };
+
+    const handleClickDelete = (e: MouseEvent<HTMLImageElement>): void => {
+        e.stopPropagation();
+        const id = e.currentTarget.getAttribute("data-id");
+        setSelected(id);
+        setIsOpenDelete(true);
+    };
+
     const renderCollection = useCallback((): JSX.Element => {
         return (
             <div>
                 <ul css={style.gridStyle}>
                     {dataCollection &&
-                        dataCollection.map((collection: any) => (
-                            <li key={collection.title} onClick={() => navigate(`/collection/${collection.title}`)} >
-                                <img src={Book} alt="" />
-                                <div>{collection.title}</div>
+                        dataCollection.map((collection: CollectionData) => (
+                            <li
+                                key={collection.title}
+                                onClick={() =>
+                                    navigate(`/collection/${collection.title}`)
+                                }
+                            >
+                                <img
+                                    src={
+                                        collection.data && collection.data[0]
+                                            ? collection.data[0].coverImage
+                                                  .large
+                                            : Book
+                                    }
+                                    alt=""
+                                />
+                                <div className="title">{collection.title}</div>
+                                <img
+                                    className="delete"
+                                    src={DeleteIcon}
+                                    alt=""
+                                    data-id={collection.title}
+                                    onClick={handleClickDelete}
+                                />
                             </li>
                         ))}
                 </ul>
             </div>
         );
     }, [dataCollection]);
+
+    const renderPopUpForm = (): JSX.Element => {
+        if (isOpen) {
+            return <AddCollectionForm onClose={handleCloseModal} />;
+        } else if (isOpenDelete) {
+            return (
+                <DeleteConfirmation
+                    onClose={handleCloseDeleteModal}
+                    handleDelete={handleDelete}
+                />
+            );
+        }
+        return <></>;
+    };
 
     return (
         <>
@@ -52,9 +114,9 @@ const Collection: React.FC<{}> = () => {
             </div>
             {dataCollection.length > 0 && renderCollection()}
             <Modal
-                title="Add New Collection"
-                isOpen={isOpen}
-                children={<AddCollectionForm onClose={handleCloseModal} />}
+                title={isOpen ? "Add New Collection" : "Are you sure ?"}
+                isOpen={isOpen || isOpenDelete}
+                children={renderPopUpForm()}
             />
         </>
     );
@@ -99,7 +161,7 @@ const style = {
         li {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: end;
             text-align: center;
 
             img {
@@ -109,11 +171,29 @@ const style = {
                 object-fit: cover;
                 border-radius: 8px;
                 cursor: pointer;
+                position: relative;
+            }
+
+            .delete {
+                position: absolute;
+                z-index: 1;
+                margin: 5px;
+                width: 30px;
+                height: 30px;
+                background-color: red;
+                border-radius: 50%;
+                transition: transform 0.3s ease-in-out;
+                &:hover {
+                    transform: scale(1.1);
+                }
             }
 
             div {
                 margin-top: 10px;
                 font-weight: bold;
+            }
+            .title {
+                align-self: center;
             }
         }
 
