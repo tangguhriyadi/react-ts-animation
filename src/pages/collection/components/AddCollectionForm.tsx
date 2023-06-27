@@ -3,8 +3,9 @@ import { css, SerializedStyles } from "@emotion/react";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { CollectionData, FormValues } from "../types";
+import { FormValues } from "../types";
 import { schema } from "../../../utils/validation";
+import { saveToLocalStorage } from "../../../utils/constant";
 
 interface Props {
     onClose: () => void;
@@ -15,23 +16,6 @@ const AddCollectionForm: React.FC<Props> = (props) => {
     const onSubmit: SubmitHandler<FormValues> = (data) => {
         saveToLocalStorage(data);
         onClose();
-    };
-    const saveToLocalStorage = (data: CollectionData): void => {
-        const existingStorage: string | null = localStorage.getItem("collection");
-        const parsedLocalStorage = existingStorage
-            ? JSON.parse(existingStorage)
-            : [];
-        let array: CollectionData[] = [];
-        if (parsedLocalStorage.length === 0) {
-            data.data = [];
-            array.push(data);
-            localStorage.setItem("collection", JSON.stringify(array));
-        } else {
-            array.push(...parsedLocalStorage);
-            data.data = [];
-            array.push(data);
-            localStorage.setItem("collection", JSON.stringify(array));
-        }
     };
 
     const {

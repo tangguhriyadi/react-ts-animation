@@ -2,6 +2,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { css, SerializedStyles } from "@emotion/react";
 import { Anime } from "../types";
+import AddNewCollection from "./AddNewCollection";
 
 interface Props {
     onClose: () => void;
@@ -11,20 +12,29 @@ interface Props {
 
 const AddToCollectionForm: React.FC<Props> = (props) => {
     const { onClose, addToCollection, handleSetDefaultState } = props;
+
+    const [isOpenAddCollection, setIsOpenAddCollection] =
+        useState<boolean>(false);
+
+    const [isError, setIsError] = useState<boolean>(false);
+
     const existingStorage: string | null = localStorage.getItem("collection");
     const parsedLocalStorage = existingStorage
         ? JSON.parse(existingStorage)
         : [];
 
-    const [selectedItem, setSelectedItem] = useState<string>(
-        parsedLocalStorage[0].title
-    );
+    const [selectedItem, setSelectedItem] = useState<string>("");
+
     const handleRadioChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSelectedItem(event.target.value);
     };
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
+        if (!selectedItem) {
+            setIsError(true);
+            return;
+        }
         // take the collections
         let currentCollection = parsedLocalStorage.filter(
             (item: any) => item.title === selectedItem
@@ -34,11 +44,11 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
         currentCollection.data.push(...addToCollection);
 
         //prevent duplication
-        const uniqueData= currentCollection.data.filter(
-            (data:Anime, index:number, array:Anime[]) =>
-              array.map((p) => p.id).indexOf(data.id) === index
-          );
-        currentCollection.data = uniqueData
+        const uniqueData = currentCollection.data.filter(
+            (data: Anime, index: number, array: Anime[]) =>
+                array.map((p) => p.id).indexOf(data.id) === index
+        );
+        currentCollection.data = uniqueData;
 
         // remove the old item
         let currentLocalStorage = parsedLocalStorage.filter(
@@ -47,47 +57,82 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
 
         // update with new item
         currentLocalStorage.push(currentCollection);
-        
+
         localStorage.setItem("collection", JSON.stringify(currentLocalStorage));
-        console.log(currentLocalStorage)
+        console.log(currentLocalStorage);
 
         handleSetDefaultState();
         onClose();
     };
 
+    const handleCloseAddNewCollection = (): void => {
+        setIsOpenAddCollection(false);
+    };
+
+    const renderCollectionList = (): JSX.Element => {
+        return (
+            <form onSubmit={handleSubmit} css={style}>
+                <h2>Available Collections</h2>
+                <div className="radio-container">
+                    {parsedLocalStorage.length > 0 ? (
+                        parsedLocalStorage.map((data: any) => (
+                            <div className="radio-item" key={data.title}>
+                                <label className="radio-label">
+                                    <input
+                                        type="radio"
+                                        name="radioButton"
+                                        value={data.title}
+                                        checked={selectedItem === data.title}
+                                        onChange={handleRadioChange}
+                                    />
+                                    {data.title}
+                                </label>
+                            </div>
+                        ))
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                <button className="button-submit" type="submit">
+                    Submit
+                </button>
+                <button className="button-cancel" onClick={onClose}>
+                    Cancel
+                </button>
+                {isError && <p className="error">Select one collection</p>}
+            </form>
+        );
+    };
     return (
-        <form onSubmit={handleSubmit} css={style}>
-            <div className="radio-container">
-                {parsedLocalStorage.length > 0 ? (
-                    parsedLocalStorage.map((data: any) => (
-                        <div className="radio-item" key={data.title}>
-                            <label className="radio-label">
-                                <input
-                                    type="radio"
-                                    name="radioButton"
-                                    value={data.title}
-                                    checked={selectedItem === data.title}
-                                    onChange={handleRadioChange}
-                                />
-                                {data.title}
-                            </label>
-                        </div>
-                    ))
-                ) : (
-                    <></>
-                )}
-            </div>
-            <button className="button-submit" type="submit">
-                Submit
-            </button>
-            <button className="button-cancel" onClick={onClose}>
-                Cancel
-            </button>
-        </form>
+        <>
+            {isOpenAddCollection ? (
+                <AddNewCollection onClose={handleCloseAddNewCollection} />
+            ) : (
+                <div css={styleButton}>
+                    <button
+                        onClick={() =>
+                            setIsOpenAddCollection(!isOpenAddCollection)
+                        }
+                    >
+                        Add New Collection
+                    </button>
+                </div>
+            )}
+            <hr />
+            {parsedLocalStorage.length > 0 ? (
+                renderCollectionList()
+            ) : (
+                <h3>You have no collection yet</h3>
+            )}
+        </>
     );
 };
 
 const style: SerializedStyles = css`
+    margin-top: 10px;
+    h2 {
+        margin-bottom: 10px !important;
+    }
     .radio-container {
         display: flex;
         flex-direction: column;
@@ -160,15 +205,24 @@ const style: SerializedStyles = css`
             background-color: #e9ecef;
         }
     }
+    .error {
+        color: red;
+        font-size: 14px;
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 2px;
+    }
 `;
 
-const radioContainerStyles = css`
+const styleButton = css`
     display: flex;
-    flex-direction: column;
-`;
-
-const radioItemStyles = css`
-    margin-bottom: 5px;
+    flex-direction: row-reverse;
+    button {
+        margin-top: 0 !important;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        padding: 7px 12px 7px 12px !important;
+    }
 `;
 
 export default AddToCollectionForm;

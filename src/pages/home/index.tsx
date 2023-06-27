@@ -51,11 +51,6 @@ const Home: React.FC = () => {
 
     const { currentPage, total: totalPage } = pageInfo;
 
-    const existingStorage: string | null = localStorage.getItem("collection");
-    const parsedLocalStorage = existingStorage
-        ? JSON.parse(existingStorage)
-        : [];
-
     const handlePageChange = (selected: number): void => {
         setPage(selected);
     };
@@ -116,6 +111,7 @@ const Home: React.FC = () => {
                                 Confirm
                             </button>
                         )}
+
                         <button
                             onClick={() => setIsChecking(false)}
                             css={homePageStyle.buttonCancel}
@@ -136,7 +132,7 @@ const Home: React.FC = () => {
     };
 
     const confirmMutation = () => {
-        if (parsedLocalStorage.length > 0) {
+        if (addToCollection.length > 0) {
             handleOpenModal();
         }
     };

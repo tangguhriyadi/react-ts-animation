@@ -23,7 +23,7 @@ const Collection: React.FC<{}> = () => {
     const existingStorage: string | null = localStorage.getItem("collection");
 
     const dataCollection = existingStorage ? JSON.parse(existingStorage) : [];
-    console.log(dataCollection)
+   
     const renderCollection = useCallback((): JSX.Element => {
         return (
             <div>
