@@ -65,11 +65,19 @@ export const homePageStyle = {
                 }
             }
 
-            .tag-status {
+            .header-status {
+                display:flex;
+                width:100%;
+                justify-content:space-between;
                 position: absolute;
-                z-index: 1;
-                align-self: start !important;
-                margin: 5px;
+                z-index: 1;    
+                .tag-status {
+                    margin: 5px;
+                }
+                .tag-format{
+                    margin: 5px;
+                    max-height:40px;
+                }
             }
         }
 

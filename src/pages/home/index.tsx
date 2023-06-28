@@ -13,6 +13,7 @@ import DefaultImage from "../../assets/default.png";
 import { handleImageError, title } from "../../utils/constant";
 import AdultOnly from "../../components/AdultOnly";
 import Badge from "../../components/Badge";
+import Format from "../../components/Format";
 
 const Home: React.FC = () => {
     const [page, setPage] = useState<number>(1);
@@ -185,9 +186,14 @@ const Home: React.FC = () => {
                             onClick={() => handleImageClick(anime)}
                         >
                             {isChecking && renderCheckBox(anime.id)}
-                            <div className="tag-status">
-                                {anime.isAdult && <AdultOnly />}
-                                {anime.isLicensed && <Badge />}
+                            <div className="header-status">
+                                <div className="tag-status">
+                                    {anime.isAdult && <AdultOnly />}
+                                    {anime.isLicensed && <Badge />}
+                                </div>
+                                <div className="tag-format">
+                                    <Format format={anime.format} />
+                                </div>
                             </div>
                             <img
                                 className="image-anime"
