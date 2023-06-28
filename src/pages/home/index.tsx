@@ -160,7 +160,11 @@ const Home: React.FC = () => {
                             {isChecking && renderCheckBox(anime.id)}
                             <img
                                 css={isChecking && darkImage}
-                                src={anime.coverImage.large ?? DefaultImage}
+                                src={
+                                    anime.coverImage.large ??
+                                    anime.coverImage.medium ??
+                                    DefaultImage
+                                }
                                 alt="../../assets/default.png"
                                 onError={handleImageError}
                                 loading="lazy"

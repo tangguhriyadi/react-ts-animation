@@ -108,3 +108,9 @@ export const title = (data: any): string => {
         return data.native;
     } else return "untitled";
 };
+
+export const stripTags = (htmlString: string | undefined) => {
+    const tempDiv = document.createElement('div')
+    tempDiv.innerHTML = htmlString;
+    return tempDiv.textContent || tempDiv.innerText || '';
+}
