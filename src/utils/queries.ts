@@ -23,6 +23,7 @@ export const GET_ANIME_LIST = gql`
                 }
                 format
                 type
+                isLicensed
                 isAdult
                 startDate {
                     year

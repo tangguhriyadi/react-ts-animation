@@ -12,14 +12,20 @@ export const homePageStyle = {
             flex-direction: column;
             align-items: center;
             text-align: center;
+            max-height: 300px;
+            position: relative;
+            cursor: pointer;
 
             .checkbox {
                 position: absolute;
                 z-index: 1;
-                margin: 0;
+                margin-top: 70px;
+                img {
+                    width:150px;
+                }
             }
 
-            img {
+            .image-anime {
                 width: 100%;
                 max-width: 275px;
                 height: 300px;
@@ -27,15 +33,43 @@ export const homePageStyle = {
                 border-radius: 8px;
                 cursor: pointer;
                 position: relative;
+                @media (max-width: 480px) {
+                    width: 275px;
+                }
             }
 
-            .title {
-                margin-top: 10px;
-                font-weight: bold;
+            .title-container {
+                position: absolute;
+                height: 300px;
+                display: flex;
+                flex-direction: column-reverse;
+                width: 100%;
+                .title {
+                    color: #fff;
+                    margin-top: 10px;
+                    font-weight: bold;
+                    position: relative;
+                    background-color: rgba(0, 0, 0, 0.5);
+                }
+                .year {
+                    margin-top: 0;
+                    font-weight: bold;
+                    color: #fff;
+                    position: relative;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    border-bottom-left-radius: 50%;
+                    border-bottom-right-radius: 50%;
+                }
+                @media (max-width: 480px) {
+                    max-width: 275px;
+                }
             }
-            .year {
-                margin-top: 0;
-                font-weight: bold;
+
+            .tag-status {
+                position: absolute;
+                z-index: 1;
+                align-self: start !important;
+                margin: 5px;
             }
         }
 
@@ -44,7 +78,10 @@ export const homePageStyle = {
         }
 
         @media (max-width: 480px) {
-            grid-template-columns: repeat(1, 1fr);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
     `,
     headerStyle: css`

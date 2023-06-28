@@ -254,6 +254,10 @@ const style: SerializedStyles = css`
             margin: 0 20px;
         }
     }
+    tag-status {
+        position:absolute;
+        align-self:start;
+    }
 `;
 
 export default AnimeDetail;

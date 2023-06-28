@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import useAnimeList from "./hooks/useAnimeList";
 import Pagination from "./components/Pagination";
 import { Anime, PageInfo } from "./types";
@@ -11,6 +11,8 @@ import Modal from "../../components/Modal";
 import AddToCollectionForm from "./components/AddToCollectionForm";
 import DefaultImage from "../../assets/default.png";
 import { handleImageError, title } from "../../utils/constant";
+import AdultOnly from "../../components/AdultOnly";
+import Badge from "../../components/Badge";
 
 const Home: React.FC = () => {
     const [page, setPage] = useState<number>(1);
@@ -22,6 +24,10 @@ const Home: React.FC = () => {
     const { error, loading, data } = useAnimeList({ page });
 
     const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+
+    const div1Ref = useRef<HTMLImageElement>(null);
+
+    const div2Ref = useRef<HTMLDivElement>(null);
 
     const handleSetDefaultState = (): void => {
         setIsChecking(false);
@@ -47,6 +53,27 @@ const Home: React.FC = () => {
     }, [data]);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (let entry of entries) {
+                if (entry.target === div1Ref.current) {
+                    // Mengupdate lebar div2 saat div1 berubah lebar
+                    div2Ref.current!.style.width = `${entry.contentRect.width}px`;
+                }
+            }
+        });
+
+        if (div1Ref.current) {
+            resizeObserver.observe(div1Ref.current);
+        }
+
+        return () => {
+            if (div1Ref.current) {
+                resizeObserver.unobserve(div1Ref.current);
+            }
+        };
+    }, []);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error </p>;
@@ -118,7 +145,7 @@ const Home: React.FC = () => {
                         )}
 
                         <button
-                            onClick={() => setIsChecking(false)}
+                            onClick={() => handleSetDefaultState()}
                             css={homePageStyle.buttonCancel}
                         >
                             Cancel
@@ -158,7 +185,12 @@ const Home: React.FC = () => {
                             onClick={() => handleImageClick(anime)}
                         >
                             {isChecking && renderCheckBox(anime.id)}
+                            <div className="tag-status">
+                                {anime.isAdult && <AdultOnly />}
+                                {anime.isLicensed && <Badge />}
+                            </div>
                             <img
+                                className="image-anime"
                                 css={isChecking && darkImage}
                                 src={
                                     anime.coverImage.large ??
@@ -168,14 +200,20 @@ const Home: React.FC = () => {
                                 alt="../../assets/default.png"
                                 onError={handleImageError}
                                 loading="lazy"
+                                ref={div1Ref}
                             />
-                            <div className="title">{title(anime.title)}</div>
-                            <div className="year">
-                                {`(${
-                                    anime.startDate?.year
-                                        ? anime.startDate?.year
-                                        : anime.endDate?.year
-                                })`}
+                            <div className="title-container" ref={div2Ref}>
+                                <div className="year">
+                                    {`(${
+                                        anime.startDate?.year
+                                            ? anime.startDate?.year
+                                            : anime.endDate?.year
+                                    })`}
+                                </div>
+                                <div className="title">
+                                    {title(anime.title)}
+                                </div>
+                                <div className="overlay"></div>
                             </div>
                         </li>
                     ))}

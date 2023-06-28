@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import React from "react";
-import Badges from "../assets/badge.jpg";
+import Badges from "../assets/badge.png";
 
 const Badge: React.FC = () => {
     return (
