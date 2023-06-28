@@ -27,9 +27,6 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
         ? JSON.parse(existingStorage)
         : [];
 
-        console.log(added)
-        console.log(parsedLocalStorage)
-
     const availableCollection = useMemo(() => {
         if (added && added.length > 0) {
             return parsedLocalStorage.filter((collection: CollectionData) => {
@@ -37,9 +34,7 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
             });
         }
         return parsedLocalStorage;
-    }, [added]);
-
-    console.log(availableCollection)
+    }, [added, parsedLocalStorage]);
 
     const handleRadioChange = (value: string) => {
         if (selectedItem.includes(value)) {
