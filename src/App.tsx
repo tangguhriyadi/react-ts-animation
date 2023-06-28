@@ -23,6 +23,7 @@ function App() {
                             path="/collection/:title"
                             element={<CollectionDetail />}
                         />
+                        <Route path="*" element={<>asd</>} />
                     </Routes>
                 </div>
             </BrowserRouter>

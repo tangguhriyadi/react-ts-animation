@@ -29,8 +29,12 @@ export const homePageStyle = {
                 position: relative;
             }
 
-            div {
+            .title {
                 margin-top: 10px;
+                font-weight: bold;
+            }
+            .year {
+                margin-top: 0;
                 font-weight: bold;
             }
         }
@@ -84,9 +88,9 @@ export const homePageStyle = {
         display: flex;
         justify-content: center;
         margin-top: 10px;
-        position:sticky;
-        top:0;
-        z-index:1;
+        position: sticky;
+        top: 0;
+        z-index: 1;
         padding-top: 10px;
     `,
     direction: css`

@@ -26,7 +26,7 @@ export const paginationLinkStyles: SerializedStyles = css`
 `;
 
 export const activePageStyles: SerializedStyles = css`
-    background-color: #555;
+    background-color: #79c142;
     color: #fff;
 `;
 

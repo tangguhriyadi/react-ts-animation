@@ -3,10 +3,16 @@ import React, { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useAnimeDetail from "./hooks/useAnimeDetail";
 import { css, SerializedStyles } from "@emotion/react";
-import { convertNumber, getCollectionByAnimeName } from "../../utils/constant";
+import {
+    convertNumber,
+    getCollectionByAnimeName,
+    handleImageBannerError,
+    title,
+} from "../../utils/constant";
 import Modal from "../../components/Modal";
 import AddToCollectionForm from "../home/components/AddToCollectionForm";
 import { Anime } from "../home/types";
+import DefaultBanner from "../../assets/defaultBanner.png";
 
 const AnimeDetail: React.FC<{}> = () => {
     const params = useParams<{ id: string }>();
@@ -41,14 +47,23 @@ const AnimeDetail: React.FC<{}> = () => {
     return (
         <div css={style}>
             <div className="img-container">
-                <img src={data?.Media.bannerImage} alt="" />
+                <img
+                    src={
+                        data?.Media.bannerImage
+                            ? data?.Media.bannerImage
+                            : DefaultBanner
+                    }
+                    alt="../../assets/defaultBanner.png"
+                    onError={handleImageBannerError}
+                    loading="lazy"
+                />
             </div>
             <div className="button-container-detail">
                 <button onClick={handleOpenModal}>Add to Collection</button>
             </div>
             <div className="detail">
                 <div>
-                    Title: {data?.Media.title.english}{" "}
+                    Title: {title(data?.Media.title)}{" "}
                     {`(${data?.Media.title.native})`}
                 </div>
                 <div>Type: {data?.Media.type}</div>
@@ -61,7 +76,7 @@ const AnimeDetail: React.FC<{}> = () => {
                 <div>Synopsis: {data?.Media.description}</div>
             </div>
             <div className="collection-list">
-                {data?.Media.title.english} has been added to your collection
+                {title(data?.Media.title)} has been added to your collection
                 below:
             </div>
             {collection.map((col) => (

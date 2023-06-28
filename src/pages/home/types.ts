@@ -9,11 +9,11 @@ export interface Anime {
         medium: string;
         large: string;
     };
-    episodes: number;
+    episodes?: number;
     format: string;
     type: string;
     siteUrl: string;
-    isLicensed: boolean;
+    isLicensed?: boolean;
     description?: string;
     bannerImage?: string;
     meanScore?: number;

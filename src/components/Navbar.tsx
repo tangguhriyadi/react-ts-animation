@@ -7,7 +7,9 @@ const Navbar: React.FC<{}> = () => {
     const navigate = useNavigate();
     return (
         <div css={style}>
-            <h1 onClick={() => navigate("/")}>Anime Flix</h1>
+            <h1 onClick={() => navigate("/")}>
+                Anime <span className="flix">Flix</span>
+            </h1>
             <div></div>
             <Link to="/collection" className="collection">
                 My Collection
@@ -30,6 +32,9 @@ const style: SerializedStyles = css`
         display: flex;
         align-items: center;
         cursor: pointer;
+        .flix {
+            color: #79c142;
+        }
     }
     .collection {
         display: flex;

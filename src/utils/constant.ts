@@ -1,4 +1,5 @@
 import { CollectionData } from "../pages/collection/types";
+import { SyntheticEvent } from "react";
 interface DeleteProps {
     data: CollectionData[];
     collectionId: string | undefined;
@@ -83,4 +84,27 @@ export const getCollectionByAnimeName = (id: number | undefined) => {
     });
 
     return filteredData;
+};
+
+export const handleImageError = (
+    e: SyntheticEvent<HTMLImageElement, Event>
+) => {
+    const target = e.target as HTMLImageElement;
+    target.src = "../../assets/default.png";
+};
+export const handleImageBannerError = (
+    e: SyntheticEvent<HTMLImageElement, Event>
+) => {
+    const target = e.target as HTMLImageElement;
+    target.src = "../../assets/defaultBanner.png";
+};
+
+export const title = (data: any): string => {
+    if (data.english) {
+        return data.english;
+    } else if (data.romaji) {
+        return data.romaji;
+    } else if (data.native) {
+        return data.native;
+    } else return "untitled";
 };
