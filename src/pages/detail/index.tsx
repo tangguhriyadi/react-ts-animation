@@ -7,13 +7,16 @@ import {
     convertNumber,
     getCollectionByAnimeName,
     handleImageBannerError,
+    stripTags,
     title,
 } from "../../utils/constant";
 import Modal from "../../components/Modal";
 import AddToCollectionForm from "../home/components/AddToCollectionForm";
 import { Anime } from "../home/types";
 import DefaultBanner from "../../assets/defaultBanner.png";
-
+import DefaultImage from "../../assets/default.png";
+import AdultOnly from "../../components/AdultOnly";
+import Badge from "../../components/Badge";
 const AnimeDetail: React.FC<{}> = () => {
     const params = useParams<{ id: string }>();
 
@@ -58,33 +61,67 @@ const AnimeDetail: React.FC<{}> = () => {
                     loading="lazy"
                 />
             </div>
-            <div className="button-container-detail">
-                <button onClick={handleOpenModal}>Add to Collection</button>
-            </div>
-            <div className="detail">
-                <div>
-                    Title: {title(data?.Media.title)}{" "}
-                    {`(${data?.Media.title.native})`}
+            <div className="content-detail">
+                <div className="img-content">
+                    <img
+                        src={
+                            data?.Media.coverImage.large ??
+                            data?.Media.coverImage.medium ??
+                            DefaultImage
+                        }
+                    />
+                    <div className="button-container-detail">
+                        <button
+                            className="button-add"
+                            onClick={handleOpenModal}
+                        >
+                            Add to Collection
+                        </button>
+                    </div>
                 </div>
-                <div>Type: {data?.Media.type}</div>
-                <div>Total Episode: {data?.Media.episodes}</div>
-                <div>
-                    Released: {data?.Media.startDate?.year}-
-                    {convertNumber(data?.Media.startDate?.month)}-
-                    {convertNumber(data?.Media.startDate?.day)}
+                <div className="detail">
+                    <div className="tag-status">
+                        {data?.Media.isAdult && <AdultOnly />}
+                        {data?.Media.isLicensed && <Badge />}
+                    </div>
+                    <div>
+                        <b>Title</b>: {title(data?.Media.title)}{" "}
+                        {`(${data?.Media.title.native})`}
+                    </div>
+                    <div>
+                        <b>Type</b>: {data?.Media.type}
+                    </div>
+                    <div>
+                        <b>Total Episode</b>: {data?.Media.episodes}
+                    </div>
+                    <div>
+                        <b>Released</b>: {data?.Media.startDate?.year}-
+                        {convertNumber(data?.Media.startDate?.month)}-
+                        {convertNumber(data?.Media.startDate?.day)}
+                    </div>
+                    <div>
+                        <b>Synopsis</b>:<br />{" "}
+                        <p>{stripTags(data?.Media.description ?? "")}</p>
+                    </div>
+                    {collection.length > 0 && (
+                        <div className="collection-list">
+                            {title(data?.Media.title)} has been added to your
+                            collection below:
+                        </div>
+                    )}
+                    {collection.length > 0 &&
+                        collection.map((col) => (
+                            <Link
+                                className="collection-item"
+                                key={col.title}
+                                to={`/collection/${col.title}`}
+                            >
+                                &#8594;
+                                <span>{col.title}</span>
+                            </Link>
+                        ))}
                 </div>
-                <div>Synopsis: {data?.Media.description}</div>
             </div>
-            <div className="collection-list">
-                {title(data?.Media.title)} has been added to your collection
-                below:
-            </div>
-            {collection.map((col) => (
-                <Link key={col.title} to={`/collection/${col.title}`}>
-                    {" "}
-                    {col.title}{" "}
-                </Link>
-            ))}
             <Modal
                 title="Select Collection"
                 isOpen={isOpenModal}
@@ -92,6 +129,7 @@ const AnimeDetail: React.FC<{}> = () => {
                     <AddToCollectionForm
                         addToCollection={addToCollection}
                         onClose={handleCloseModal}
+                        added={collection}
                     />
                 }
             />
@@ -111,34 +149,110 @@ const style: SerializedStyles = css`
             filter: brightness(0.5);
         }
     }
-    .button-container-detail {
+
+    .content-detail {
         display: flex;
         justify-content: center;
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            text-decoration: none;
-            background-color: #79c142;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            &:hover {
-                background-color: #5d9d34;
+        margin: 0 64px;
+        padding: 0 50px;
+        .img-content {
+            display: flex;
+            flex-direction: column;
+            img {
+                transform: translateY(-50%);
+                @media (max-width: 768px) {
+                    transform: translateY(-15%);
+                }
+                @media (max-width: 480px) {
+                    transform: translateY(-15%);
+                    padding: 0 20px;
+                    margin: 0 20px;
+                }
+            }
+            .button-container-detail {
+                display: flex;
+                justify-content: center;
+                margin-top: -150px;
+                .button-add {
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    text-align: center;
+                    text-decoration: none;
+                    background-color: #79c142;
+                    color: #fff;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                    &:hover {
+                        background-color: #5d9d34;
+                    }
+                }
+                @media (max-width: 768px) {
+                    margin-top: -40px;
+                }
+                @media (max-width: 480px) {
+                    margin-top: -40px;
+                }
+            }
+            @media (max-width: 768px) {
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center;
             }
         }
-    }
-    .detail {
-        h2 {
-            text-align: center;
-            margin: 5px;
+        .detail {
+            margin-left: 10px;
+            display: flex;
+            flex-direction: column;
+            .tag-status {
+                align-self: start;
+                gap: 5px;
+                display: flex;
+                flex-direction: row;
+            }
+            h2 {
+                text-align: center;
+                margin: 5px;
+            }
+            .collection-list {
+                margin-top: 20px;
+                align-self: start;
+            }
+            .collection-item {
+                margin-left: 20px;
+                text-decoration: none;
+                color: #11101d;
+                align-self: start;
+                span {
+                    margin-left: 10px;
+                    font-weight: bold;
+                }
+            }
+            p {
+                text-align: justify;
+            }
+            @media (max-width: 768px) {
+                display: block !important;
+                margin-top: 10px;
+            }
+            @media (max-width: 480px) {
+                display: block !important;
+                margin-top: 10px;
+            }
         }
-    }
-    .collection-list {
-        margin-top: 20px;
+        @media (max-width: 768px) {
+            display: block !important;
+            padding: 0 40px;
+            margin: 0 40px;
+        }
+
+        @media (max-width: 480px) {
+            display: block !important;
+            padding: 0 20px;
+            margin: 0 20px;
+        }
     }
 `;
 

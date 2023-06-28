@@ -1,29 +1,45 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useMemo } from "react";
 import { css, SerializedStyles } from "@emotion/react";
 import { Anime } from "../types";
 import AddNewCollection from "./AddNewCollection";
+import { CollectionData } from "../../collection/types";
 
 interface Props {
     onClose: () => void;
     addToCollection: Anime[];
     handleSetDefaultState?: () => void;
+    added?: CollectionData[];
 }
 
 const AddToCollectionForm: React.FC<Props> = (props) => {
-    const { onClose, addToCollection, handleSetDefaultState } = props;
+    const { onClose, addToCollection, handleSetDefaultState, added } = props;
 
     const [isOpenAddCollection, setIsOpenAddCollection] =
         useState<boolean>(false);
 
     const [isError, setIsError] = useState<boolean>(false);
 
+    const [selectedItem, setSelectedItem] = useState<string[]>([]);
+
     const existingStorage: string | null = localStorage.getItem("collection");
     const parsedLocalStorage = existingStorage
         ? JSON.parse(existingStorage)
         : [];
 
-    const [selectedItem, setSelectedItem] = useState<string[]>([]);
+        console.log(added)
+        console.log(parsedLocalStorage)
+
+    const availableCollection = useMemo(() => {
+        if (added && added.length > 0) {
+            return parsedLocalStorage.filter((collection: CollectionData) => {
+                return !added.some((col) => collection.title == col.title);
+            });
+        }
+        return parsedLocalStorage;
+    }, [added]);
+
+    console.log(availableCollection)
 
     const handleRadioChange = (value: string) => {
         if (selectedItem.includes(value)) {
@@ -80,9 +96,9 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
     };
 
     const renderCollectionList = (): JSX.Element => {
-        const splitIndex = Math.ceil(parsedLocalStorage.length / 2);
-        const leftOptions = parsedLocalStorage.slice(0, splitIndex);
-        const rightOptions = parsedLocalStorage.slice(splitIndex);
+        const splitIndex = Math.ceil(availableCollection.length / 2);
+        const leftOptions = availableCollection.slice(0, splitIndex);
+        const rightOptions = availableCollection.slice(splitIndex);
         return (
             <form onSubmit={handleSubmit} css={style}>
                 <h2>Available Collections</h2>
