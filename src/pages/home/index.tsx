@@ -10,7 +10,7 @@ import Checklist from "../../assets/checklist.svg";
 import Modal from "../../components/Modal";
 import AddToCollectionForm from "./components/AddToCollectionForm";
 import DefaultImage from "../../assets/default.png";
-import { handleImageError } from "../../utils/constant";
+import { handleImageError, title } from "../../utils/constant";
 
 const Home: React.FC = () => {
     const [page, setPage] = useState<number>(1);
@@ -165,7 +165,14 @@ const Home: React.FC = () => {
                                 onError={handleImageError}
                                 loading="lazy"
                             />
-                            <div>{anime.title.romaji}</div>
+                            <div className="title">{title(anime.title)}</div>
+                            <div className="year">
+                                {`(${
+                                    anime.startDate?.year
+                                        ? anime.startDate?.year
+                                        : anime.endDate?.year
+                                })`}
+                            </div>
                         </li>
                     ))}
             </ul>

@@ -21,11 +21,19 @@ export const GET_ANIME_LIST = gql`
                     medium
                     large
                 }
-                episodes
                 format
-                isLicensed
                 type
                 isAdult
+                startDate {
+                    year
+                    month
+                    day
+                }
+                endDate {
+                    year
+                    month
+                    day
+                }
             }
         }
     }

@@ -7,6 +7,7 @@ import {
     convertNumber,
     getCollectionByAnimeName,
     handleImageBannerError,
+    title,
 } from "../../utils/constant";
 import Modal from "../../components/Modal";
 import AddToCollectionForm from "../home/components/AddToCollectionForm";
@@ -62,7 +63,7 @@ const AnimeDetail: React.FC<{}> = () => {
             </div>
             <div className="detail">
                 <div>
-                    Title: {data?.Media.title.english}{" "}
+                    Title: {title(data?.Media.title)}{" "}
                     {`(${data?.Media.title.native})`}
                 </div>
                 <div>Type: {data?.Media.type}</div>
@@ -75,7 +76,7 @@ const AnimeDetail: React.FC<{}> = () => {
                 <div>Synopsis: {data?.Media.description}</div>
             </div>
             <div className="collection-list">
-                {data?.Media.title.english} has been added to your collection
+                {title(data?.Media.title)} has been added to your collection
                 below:
             </div>
             {collection.map((col) => (
