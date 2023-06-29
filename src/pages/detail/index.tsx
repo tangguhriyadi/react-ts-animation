@@ -209,6 +209,7 @@ const style: SerializedStyles = css`
             }
         }
         .detail {
+            margin-bottom:130px;
             .detail-item {
                 margin-bottom: 5px;
             }

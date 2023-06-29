@@ -6,7 +6,7 @@ interface ModalProps {
     isOpen: boolean;
     title: string;
     children: JSX.Element;
-    onClose?: () => void
+    onClose?: () => void;
 }
 
 const Modal: React.FC<ModalProps> = (props) => {
@@ -40,7 +40,7 @@ const style: SerializedStyles = css`
     .container {
         background-color: #fff;
         width: 400px;
-        padding: 10px 20px 20px 20px;;
+        padding: 10px 20px 20px 20px;
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         h2 {
@@ -67,7 +67,7 @@ const style: SerializedStyles = css`
                 color: red;
                 font-weight: bold;
             }
-            cursor:pointer;
+            cursor: pointer;
         }
     }
 `;

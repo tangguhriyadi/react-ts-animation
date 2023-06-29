@@ -15,5 +15,9 @@ const style: SerializedStyles = css`
     display: flex;
     height: auto;
     justify-content: center;
+    height:90vh;
+    img {
+        max-height:300px;
+    }
 `;
 export default Loading;

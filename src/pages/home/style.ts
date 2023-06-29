@@ -4,7 +4,7 @@ export const homePageStyle = {
     gridStyle: css`
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        grid-gap: 20px;
+        grid-gap: 40px;
         padding: 20px;
 
         li {
@@ -12,7 +12,7 @@ export const homePageStyle = {
             flex-direction: column;
             align-items: center;
             text-align: center;
-            max-height: 300px;
+            max-height: 400px;
             position: relative;
             cursor: pointer;
 
@@ -27,8 +27,7 @@ export const homePageStyle = {
 
             .image-anime {
                 width: 100%;
-                max-width: 275px;
-                height: 300px;
+                height: 400px;
                 object-fit: cover;
                 border-radius: 8px;
                 cursor: pointer;
@@ -41,7 +40,7 @@ export const homePageStyle = {
 
             .title-container {
                 position: absolute;
-                height: 300px;
+                height: 400px;
                 display: flex;
                 flex-direction: column-reverse;
                 width: 100%;

@@ -1,4 +1,5 @@
 import "./App.css";
+import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import NotFound from "./components/NotFound";
 import Collection from "./pages/collection";
@@ -27,6 +28,7 @@ function App() {
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
+                <Footer author="Muhammad Tangguh Riyadi" year={2023} />
             </BrowserRouter>
         </>
     );

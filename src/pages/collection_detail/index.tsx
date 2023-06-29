@@ -7,7 +7,7 @@ import { CollectionData } from "../collection/types";
 import DeleteIcon from "../../assets/delete.png";
 import Modal from "../../components/Modal";
 import DefaultImage from "../../assets/default.png";
-
+import { title } from "../../utils/constant";
 import {
     deleteMutationLocal,
     getCollectionById,
@@ -78,6 +78,7 @@ const CollectionDetail: React.FC<{}> = () => {
                                             : DefaultImage
                                     }
                                     alt=""
+                                    className="anime-collection"
                                     onClick={() => handleClick(anime.id)}
                                     loading="lazy"
                                 />
@@ -90,7 +91,7 @@ const CollectionDetail: React.FC<{}> = () => {
                                     loading="lazy"
                                 />
                                 <div className="title">
-                                    {anime.title.english}
+                                    {title(anime.title)}
                                 </div>
                             </li>
                         ))}
@@ -180,16 +181,15 @@ const style = {
             flex-direction: column;
             align-items: end;
             text-align: center;
+            
 
-            img {
+            .anime-collection {
                 width: 100%;
-
-                height: 300px;
+                height: 400px !important;
                 object-fit: fill;
                 border-radius: 8px;
                 cursor: pointer;
-                position: relative;
-                box-shadow:-7px 7px 5px #888888;
+                box-shadow: -7px 7px 5px #888888;
             }
             .delete {
                 position: absolute;
@@ -200,6 +200,7 @@ const style = {
                 background-color: red;
                 border-radius: 50%;
                 transition: transform 0.3s ease-in-out;
+                cursor:pointer;
                 &:hover {
                     transform: scale(1.1);
                 }

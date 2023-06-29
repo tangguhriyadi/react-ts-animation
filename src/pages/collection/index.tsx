@@ -134,6 +134,7 @@ const Collection: React.FC<{}> = () => {
                                                   .large
                                             : DefaultImage
                                     }
+                                    className="img-collection"
                                     alt="../../assets/default.png"
                                     onError={handleImageError}
                                     loading="lazy"
@@ -242,7 +243,7 @@ const style = {
     gridStyle: css`
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        grid-gap: 20px;
+        grid-gap: 40px;
         padding: 20px;
 
         li {
@@ -254,10 +255,10 @@ const style = {
             position: relative;
             cursor: pointer;
 
-            img {
+            .img-collection {
                 width: 100%;
-                height: 300px;
-                max-width: 275px;
+                height: 400px;
+                
                 object-fit: fill;
                 border-radius: 8px;
                 cursor: pointer;
@@ -269,7 +270,7 @@ const style = {
             }
             .title-container {
                 position: absolute;
-                height: 300px;
+                height: 400px;
                 display: flex;
                 flex-direction: column-reverse;
                 width: 100%;
