@@ -17,6 +17,8 @@ import DefaultBanner from "../../assets/defaultBanner.png";
 import DefaultImage from "../../assets/default.png";
 import AdultOnly from "../../components/AdultOnly";
 import Badge from "../../components/Badge";
+import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 const AnimeDetail: React.FC<{}> = () => {
     const params = useParams<{ id: string }>();
 
@@ -42,8 +44,8 @@ const AnimeDetail: React.FC<{}> = () => {
         return [data.Media];
     }, [data]);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error </p>;
+    if (loading) return <Loading />;
+    if (error) return <Error />;
 
     const collection = getCollectionByAnimeName(param);
 
@@ -208,7 +210,7 @@ const style: SerializedStyles = css`
         }
         .detail {
             .detail-item {
-                margin-bottom:5px;
+                margin-bottom: 5px;
             }
             margin-left: 10px;
             display: flex;
@@ -218,7 +220,7 @@ const style: SerializedStyles = css`
                 color: #fff;
                 z-index: 1;
                 @media (max-width: 768px) {
-                    display:none;
+                    display: none;
                 }
             }
             .tag-status {

@@ -14,6 +14,8 @@ import { handleImageError, title } from "../../utils/constant";
 import AdultOnly from "../../components/AdultOnly";
 import Badge from "../../components/Badge";
 import Format from "../../components/Format";
+import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 
 const Home: React.FC = () => {
     const [page, setPage] = useState<number>(1);
@@ -76,8 +78,8 @@ const Home: React.FC = () => {
         };
     }, []);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error </p>;
+    if (loading) return <Loading />;
+    if (error) return <Error />;
 
     const { currentPage, total: totalPage } = pageInfo;
 
@@ -219,7 +221,6 @@ const Home: React.FC = () => {
                                 <div className="title">
                                     {title(anime.title)}
                                 </div>
-                                
                             </div>
                         </li>
                     ))}

@@ -1,5 +1,6 @@
 import "./App.css";
 import Navbar from "./components/Navbar";
+import NotFound from "./components/NotFound";
 import Collection from "./pages/collection";
 import CollectionDetail from "./pages/collection_detail";
 import AnimeDetail from "./pages/detail";
@@ -23,7 +24,7 @@ function App() {
                             path="/collection/:id"
                             element={<CollectionDetail />}
                         />
-                        <Route path="*" element={<>asd</>} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
             </BrowserRouter>
