@@ -1,5 +1,7 @@
 import "./App.css";
+import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+import NotFound from "./components/NotFound";
 import Collection from "./pages/collection";
 import CollectionDetail from "./pages/collection_detail";
 import AnimeDetail from "./pages/detail";
@@ -20,12 +22,13 @@ function App() {
                         />
                         <Route path="/collection" element={<Collection />} />
                         <Route
-                            path="/collection/:title"
+                            path="/collection/:id"
                             element={<CollectionDetail />}
                         />
-                        <Route path="*" element={<>asd</>} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
+                <Footer author="Muhammad Tangguh Riyadi" year={2023} />
             </BrowserRouter>
         </>
     );

@@ -11,9 +11,11 @@ const Navbar: React.FC<{}> = () => {
                 Anime <span className="flix">Flix</span>
             </h1>
             <div></div>
+            <div className="collection-container">
             <Link to="/collection" className="collection">
                 My Collection
             </Link>
+            </div>
         </div>
     );
 };
@@ -26,6 +28,9 @@ const style: SerializedStyles = css`
     color: #fff;
     lign-item: center;
     height: 75px;
+    position:sticky;
+    top:0;
+    z-index:2;
     h1 {
         margin-top: 0;
         margin-bottom: 0;
@@ -36,11 +41,19 @@ const style: SerializedStyles = css`
             color: #79c142;
         }
     }
-    .collection {
-        display: flex;
-        align-items: center;
-        color: #fff !important;
-        text-decoration: none;
+    .collection-container {
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        .collection {
+            display: flex;
+            align-items: center;
+            color: #fff !important;
+            text-decoration: none;
+            border:1px solid #fff;
+            padding:5px;
+            border-radius:4px;
+        }
     }
 `;
 

@@ -7,23 +7,32 @@ import { CollectionData } from "../collection/types";
 import DeleteIcon from "../../assets/delete.png";
 import Modal from "../../components/Modal";
 import DefaultImage from "../../assets/default.png";
-
-import { deleteMutationLocal, getDataLocalStorage } from "../../utils/constant";
+import { title } from "../../utils/constant";
+import {
+    deleteMutationLocal,
+    getCollectionById,
+    getDataLocalStorage,
+} from "../../utils/constant";
 import DeleteConfirmation from "../../components/DeleteConfitmation";
+import AddCollectionForm from "../collection/components/AddCollectionForm";
 
 const CollectionDetail: React.FC<{}> = () => {
-    const params = useParams<{ title: string }>();
+    const params = useParams<{ id: string }>();
 
     const navigate = useNavigate();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
+    const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
+
     const [selected, setSelected] = useState<number>(0);
+
+    const collection = getCollectionById(parseInt(params.id!));
 
     const collectionData: CollectionData[] = getDataLocalStorage();
 
     const dataAnime: CollectionData = collectionData.filter(
-        (data: any) => data.title === params.title
+        (data: any) => data.title === collection.title
     )[0];
 
     const handleClick = (id: number): void => {
@@ -34,20 +43,25 @@ const CollectionDetail: React.FC<{}> = () => {
         e.stopPropagation();
         const id = parseInt(e.currentTarget.getAttribute("data-id") || "0", 10);
         setSelected(id);
+        setIsOpenDelete(true);
+    };
+
+    const handleOpenEdit = (): void => {
         setIsOpen(true);
     };
 
     const handleClose = (): void => {
-        setIsOpen(!isOpen);
+        setIsOpenDelete(false);
+        setIsOpen(false);
     };
 
     const handleDelete = (): void => {
         deleteMutationLocal({
             data: collectionData,
-            collectionId: params.title,
+            collectionId: collection.id,
             animeId: selected,
         });
-        setIsOpen(!isOpen);
+        setIsOpenDelete(!isOpenDelete);
     };
 
     const renderCollection = useCallback((): JSX.Element => {
@@ -64,6 +78,7 @@ const CollectionDetail: React.FC<{}> = () => {
                                             : DefaultImage
                                     }
                                     alt=""
+                                    className="anime-collection"
                                     onClick={() => handleClick(anime.id)}
                                     loading="lazy"
                                 />
@@ -76,20 +91,21 @@ const CollectionDetail: React.FC<{}> = () => {
                                     loading="lazy"
                                 />
                                 <div className="title">
-                                    {anime.title.english}
+                                    {title(anime.title)}
                                 </div>
                             </li>
                         ))}
                 </ul>
                 <Modal
                     title="Are you sure?"
+                    onClose={handleClose}
                     children={
                         <DeleteConfirmation
                             onClose={handleClose}
                             handleDelete={handleDelete}
                         />
                     }
-                    isOpen={isOpen}
+                    isOpen={isOpenDelete}
                 />
             </div>
         );
@@ -98,9 +114,27 @@ const CollectionDetail: React.FC<{}> = () => {
     return (
         <>
             <div css={style.title}>
-                <h1>{params.title}</h1>
+                <h1>{collection.title}</h1>
+                <p>Description:</p>
+                <p>{collection.description} </p>
+            </div>
+            <div css={style.buttonContainer}>
+                <button onClick={handleOpenEdit} css={style.button}>
+                    Edit Collection Info
+                </button>
             </div>
             {dataAnime.data && dataAnime.data.length > 0 && renderCollection()}
+            <Modal
+                onClose={handleClose}
+                title={"Edit Collection"}
+                isOpen={isOpen}
+                children={
+                    <AddCollectionForm
+                        onClose={handleClose}
+                        id={collection.id}
+                    />
+                }
+            />
         </>
     );
 };
@@ -110,8 +144,30 @@ const style = {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        h1 {
+        h1,
+        p {
             text-align: center;
+        }
+    `,
+    buttonContainer: css`
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    `,
+    button: css`
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        background-color: #79c142;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        &:hover {
+            background-color: #5d9d34;
         }
     `,
     gridStyle: css`
@@ -125,15 +181,15 @@ const style = {
             flex-direction: column;
             align-items: end;
             text-align: center;
+            
 
-            img {
+            .anime-collection {
                 width: 100%;
-                max-width: 275px;
-                height: 300px;
-                object-fit: cover;
+                height: 400px !important;
+                object-fit: fill;
                 border-radius: 8px;
                 cursor: pointer;
-                position: relative;
+                box-shadow: -7px 7px 5px #888888;
             }
             .delete {
                 position: absolute;
@@ -144,6 +200,7 @@ const style = {
                 background-color: red;
                 border-radius: 50%;
                 transition: transform 0.3s ease-in-out;
+                cursor:pointer;
                 &:hover {
                     transform: scale(1.1);
                 }
@@ -155,6 +212,9 @@ const style = {
             }
             .title {
                 align-self: center;
+            }
+            @media (max-width: 480px) {
+                padding: 0 20px 0 20px;
             }
         }
 

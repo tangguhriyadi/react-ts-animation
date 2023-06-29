@@ -4,7 +4,7 @@ export const homePageStyle = {
     gridStyle: css`
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        grid-gap: 20px;
+        grid-gap: 40px;
         padding: 20px;
 
         li {
@@ -12,7 +12,7 @@ export const homePageStyle = {
             flex-direction: column;
             align-items: center;
             text-align: center;
-            max-height: 300px;
+            max-height: 400px;
             position: relative;
             cursor: pointer;
 
@@ -27,12 +27,12 @@ export const homePageStyle = {
 
             .image-anime {
                 width: 100%;
-                max-width: 275px;
-                height: 300px;
+                height: 400px;
                 object-fit: cover;
                 border-radius: 8px;
                 cursor: pointer;
                 position: relative;
+                box-shadow:-7px 7px 5px #888888;
                 @media (max-width: 480px) {
                     width: 275px;
                 }
@@ -40,7 +40,7 @@ export const homePageStyle = {
 
             .title-container {
                 position: absolute;
-                height: 300px;
+                height: 400px;
                 display: flex;
                 flex-direction: column-reverse;
                 width: 100%;
@@ -53,23 +53,32 @@ export const homePageStyle = {
                 }
                 .year {
                     margin-top: 0;
+                    padding-bottom:5px;
                     font-weight: bold;
                     color: #fff;
                     position: relative;
                     background-color: rgba(0, 0, 0, 0.5);
-                    border-bottom-left-radius: 50%;
-                    border-bottom-right-radius: 50%;
+                    border-bottom-left-radius: 4px;
+                    border-bottom-right-radius: 4px;
                 }
                 @media (max-width: 480px) {
                     max-width: 275px;
                 }
             }
 
-            .tag-status {
+            .header-status {
+                display:flex;
+                width:100%;
+                justify-content:space-between;
                 position: absolute;
-                z-index: 1;
-                align-self: start !important;
-                margin: 5px;
+                z-index: 1;    
+                .tag-status {
+                    margin: 5px;
+                }
+                .tag-format{
+                    margin: 5px;
+                    max-height:40px;
+                }
             }
         }
 
@@ -126,8 +135,8 @@ export const homePageStyle = {
         justify-content: center;
         margin-top: 10px;
         position: sticky;
-        top: 0;
-        z-index: 1;
+        top: 75px;
+        z-index: 2;
         padding-top: 10px;
     `,
     direction: css`

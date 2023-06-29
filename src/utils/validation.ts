@@ -26,3 +26,13 @@ export const schema = yup
         description: yup.string().required(),
     })
     .required();
+
+export const schemaEdit = yup
+    .object({
+        title: yup
+            .string()
+            .required()
+            .matches(/^[a-zA-Z0-9\s]+$/, 'Special character is not allowed'),
+        description: yup.string().required(),
+    })
+    .required();

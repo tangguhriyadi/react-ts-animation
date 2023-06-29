@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { css, SerializedStyles } from "@emotion/react";
 import React from "react";
 
 const AdultOnly: React.FC = () => {
@@ -11,7 +11,8 @@ const AdultOnly: React.FC = () => {
     );
 };
 
-const style = css`
+const style: SerializedStyles = css`
+margin-bottom:5px;
     .logo {
         background-color: #fa244d;
         color: #fff;
@@ -29,11 +30,19 @@ const style = css`
       margin-top:-50px;
       background-color:#fff;
       padding:2px;
+      width:80px;
       border-radius:2px;
       transform:translateX(-20%);
+      transform:translateY(-50%);
       border: 1px solid black !important;
+      @media (max-width: 480px) {
+        transform:translateY(-20%);
     }
     
+    transition: transform 0.3s ease-in-out;
+    &:hover {
+        transform: scale(1.1);
+    }
 `;
 
 export default AdultOnly;

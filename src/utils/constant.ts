@@ -1,13 +1,11 @@
 import { CollectionData } from "../pages/collection/types";
 import { SyntheticEvent } from "react";
-interface DeleteProps {
-    data: CollectionData[];
-    collectionId: string | undefined;
-    animeId: number;
-}
 interface DeleteCollectionProps {
     data: CollectionData[];
-    collectionId: string | null;
+    collectionId?: number | null;
+}
+interface DeleteProps extends DeleteCollectionProps {
+    animeId: number;
 }
 
 export const saveToLocalStorage = (data: CollectionData): void => {
@@ -18,11 +16,13 @@ export const saveToLocalStorage = (data: CollectionData): void => {
     let array: CollectionData[] = [];
     if (parsedLocalStorage.length === 0) {
         data.data = [];
+        data.id = Math.round(new Date().getTime() / 1000);
         array.push(data);
         localStorage.setItem("collection", JSON.stringify(array));
     } else {
         array.push(...parsedLocalStorage);
         data.data = [];
+        data.id = Math.round(new Date().getTime() / 1000);
         array.push(data);
         localStorage.setItem("collection", JSON.stringify(array));
     }
@@ -34,7 +34,7 @@ export const deleteMutationCollectionLocal = (
     const { data, collectionId } = props;
 
     const updatedData = data.filter(
-        (d: CollectionData) => d.title != collectionId
+        (d: CollectionData) => d.id != collectionId
     );
 
     localStorage.setItem("collection", JSON.stringify(updatedData));
@@ -44,7 +44,7 @@ export const deleteMutationLocal = (props: DeleteProps): void => {
     const { data, collectionId, animeId } = props;
 
     const updatedData = data.map((item) => {
-        if (item.title === collectionId) {
+        if (item.id === collectionId) {
             const dataPersist = item.data ? item.data : [];
             const filteredData = dataPersist.filter(
                 (obj) => obj.id !== animeId
@@ -73,7 +73,7 @@ export const getDataLocalStorage = () => {
     return parsedLocalStorage;
 };
 
-export const getCollectionByAnimeName = (id: number | undefined) => {
+export const getCollectionByAnimeName = (id?: number) => {
     const collection: CollectionData[] = getDataLocalStorage();
 
     const filteredData = collection.filter((item) => {
@@ -84,6 +84,23 @@ export const getCollectionByAnimeName = (id: number | undefined) => {
     });
 
     return filteredData;
+};
+
+export const getCollectionByName = (title?: string | null): CollectionData => {
+    const collection: CollectionData[] = getDataLocalStorage();
+
+    return collection.filter((item) => item.title === title)[0];
+};
+export const getCollectionById = (id?: number): CollectionData => {
+    if (!id)
+        return {
+            title: "",
+            description: "",
+        };
+
+    const collection: CollectionData[] = getDataLocalStorage();
+
+    return collection.filter((item) => item.id === id)[0];
 };
 
 export const handleImageError = (
@@ -109,8 +126,27 @@ export const title = (data: any): string => {
     } else return "untitled";
 };
 
-export const stripTags = (htmlString: string | undefined) => {
-    const tempDiv = document.createElement('div')
+export const stripTags = (htmlString: string) => {
+    const tempDiv = document.createElement("div");
     tempDiv.innerHTML = htmlString;
-    return tempDiv.textContent || tempDiv.innerText || '';
-}
+    return tempDiv.textContent || tempDiv.innerText || "";
+};
+
+export const editCollectionMutation = (
+    data: CollectionData,
+    id?: number | null
+): void => {
+    const collection: CollectionData[] = getDataLocalStorage();
+    const editedData = collection.map((col) => {
+        if (col.id === id) {
+            return {
+                ...col,
+                title: data.title,
+                description: data.description,
+            };
+        }
+        return col;
+    });
+
+    localStorage.setItem("collection", JSON.stringify(editedData));
+};
