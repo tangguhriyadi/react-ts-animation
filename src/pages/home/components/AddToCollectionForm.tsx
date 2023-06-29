@@ -172,7 +172,7 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
                             setIsOpenAddCollection(!isOpenAddCollection)
                         }
                     >
-                        Add New Collection
+                        Add a Collection
                     </button>
                 </div>
             )}

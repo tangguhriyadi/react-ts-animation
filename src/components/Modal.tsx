@@ -36,7 +36,7 @@ const style: SerializedStyles = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2;
+    z-index: 3;
     .container {
         background-color: #fff;
         width: 400px;

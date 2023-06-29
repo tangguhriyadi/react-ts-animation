@@ -33,6 +33,7 @@ export const homePageStyle = {
                 border-radius: 8px;
                 cursor: pointer;
                 position: relative;
+                box-shadow:-7px 7px 5px #888888;
                 @media (max-width: 480px) {
                     width: 275px;
                 }
@@ -135,7 +136,7 @@ export const homePageStyle = {
         justify-content: center;
         margin-top: 10px;
         position: sticky;
-        top: 0;
+        top: 75px;
         z-index: 2;
         padding-top: 10px;
     `,

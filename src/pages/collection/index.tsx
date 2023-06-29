@@ -39,7 +39,7 @@ const Collection: React.FC<{}> = () => {
 
     const formTitle = useMemo<string>(() => {
         if (isOpen && !isOpenEdit && !isOpenDelete) {
-            return "Add New Collection";
+            return "Add a Collection";
         } else if (isOpenEdit && !isOpenDelete && !isOpen) {
             return `Edit Collection`;
         } else if (isOpenDelete && !isOpenEdit && !isOpen) {
@@ -194,7 +194,7 @@ const Collection: React.FC<{}> = () => {
                 <h1>Collections</h1>
                 <div css={style.buttonContainer}>
                     <button onClick={handleOpenModal} css={style.button}>
-                        Add New Collection
+                        Add a Collection
                     </button>
                 </div>
             </div>
@@ -262,6 +262,7 @@ const style = {
                 border-radius: 8px;
                 cursor: pointer;
                 position: relative;
+                box-shadow:-7px 7px 5px #888888;
                 @media (max-width: 480px) {
                     width: 275px;
                 }

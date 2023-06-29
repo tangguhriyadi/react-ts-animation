@@ -28,6 +28,9 @@ const style: SerializedStyles = css`
     color: #fff;
     lign-item: center;
     height: 75px;
+    position:sticky;
+    top:0;
+    z-index:2;
     h1 {
         margin-top: 0;
         margin-bottom: 0;

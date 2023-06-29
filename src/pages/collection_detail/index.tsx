@@ -189,6 +189,7 @@ const style = {
                 border-radius: 8px;
                 cursor: pointer;
                 position: relative;
+                box-shadow:-7px 7px 5px #888888;
             }
             .delete {
                 position: absolute;
