@@ -24,15 +24,15 @@ const Collection: React.FC<{}> = () => {
 
     const [isOpenEdit, setIsOpenEdit] = useState(false);
 
-    const [selected, setSelected] = useState<string | null>("");
+    const [selected, setSelected] = useState<number>(0);
 
     const formTitle = useMemo<string>(() => {
         if (isOpen && !isOpenEdit && !isOpenDelete) {
             return "Add New Collection";
         } else if (isOpenEdit && !isOpenDelete && !isOpen) {
-            return `Edit Collection "${selected}"`;
+            return `Edit Collection`;
         } else if (isOpenDelete && !isOpenEdit && !isOpen) {
-            return `Are you sure want to delete collection "${selected}" ?`;
+            return `Are you sure want to delete ?`;
         }
         return "";
     }, [isOpen, isOpenEdit, isOpenDelete]);
@@ -64,14 +64,14 @@ const Collection: React.FC<{}> = () => {
     const handleClickDelete = (e: MouseEvent<HTMLImageElement>): void => {
         e.stopPropagation();
         const id = e.currentTarget.getAttribute("data-id");
-        setSelected(id);
+        setSelected(parseInt(id!));
         setIsOpenDelete(true);
     };
 
     const handleClickEdit = (e: MouseEvent<HTMLImageElement>): void => {
         e.stopPropagation();
         const id = e.currentTarget.getAttribute("data-id");
-        setSelected(id);
+        setSelected(parseInt(id!));
         setIsOpenEdit(true);
     };
 
@@ -82,9 +82,9 @@ const Collection: React.FC<{}> = () => {
                     {dataCollection &&
                         dataCollection.map((collection: CollectionData) => (
                             <li
-                                key={collection.title}
+                                key={collection.id}
                                 onClick={() =>
-                                    navigate(`/collection/${collection.title}`)
+                                    navigate(`/collection/${collection.id}`)
                                 }
                             >
                                 <img
@@ -103,7 +103,7 @@ const Collection: React.FC<{}> = () => {
                                     className="delete"
                                     src={DeleteIcon}
                                     alt=""
-                                    data-id={collection.title}
+                                    data-id={collection.id}
                                     onClick={handleClickDelete}
                                     loading="lazy"
                                 />
@@ -111,7 +111,7 @@ const Collection: React.FC<{}> = () => {
                                     className="edit"
                                     src={EditIcon}
                                     alt=""
-                                    data-id={collection.title}
+                                    data-id={collection.id}
                                     onClick={handleClickEdit}
                                     loading="lazy"
                                 />
@@ -134,7 +134,10 @@ const Collection: React.FC<{}> = () => {
             );
         } else if (isOpenEdit && !isOpenDelete && !isOpen) {
             return (
-                <AddCollectionForm onClose={handleCloseModal} id={selected} />
+                <AddCollectionForm
+                    onClose={handleCloseModal}
+                    id={selected}
+                />
             );
         }
         return <></>;
@@ -253,8 +256,12 @@ const style = {
             .title {
                 align-self: center;
             }
+            @media (max-width: 768px) {
+                grid-template-columns: repeat(3, 1fr);
+                margin-bottom:20px;
+            }
         }
-
+        
         @media (max-width: 768px) {
             grid-template-columns: repeat(3, 1fr);
         }

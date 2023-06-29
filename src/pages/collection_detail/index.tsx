@@ -10,14 +10,14 @@ import DefaultImage from "../../assets/default.png";
 
 import {
     deleteMutationLocal,
-    getCollectionByName,
+    getCollectionById,
     getDataLocalStorage,
 } from "../../utils/constant";
 import DeleteConfirmation from "../../components/DeleteConfitmation";
 import AddCollectionForm from "../collection/components/AddCollectionForm";
 
 const CollectionDetail: React.FC<{}> = () => {
-    const params = useParams<{ title: string }>();
+    const params = useParams<{ id: string }>();
 
     const navigate = useNavigate();
 
@@ -27,12 +27,12 @@ const CollectionDetail: React.FC<{}> = () => {
 
     const [selected, setSelected] = useState<number>(0);
 
-    const collection = getCollectionByName(params.title);
+    const collection = getCollectionById(parseInt(params.id!));
 
     const collectionData: CollectionData[] = getDataLocalStorage();
 
     const dataAnime: CollectionData = collectionData.filter(
-        (data: any) => data.title === params.title
+        (data: any) => data.title === collection.title
     )[0];
 
     const handleClick = (id: number): void => {
@@ -58,7 +58,7 @@ const CollectionDetail: React.FC<{}> = () => {
     const handleDelete = (): void => {
         deleteMutationLocal({
             data: collectionData,
-            collectionId: params.title,
+            collectionId: collection.id,
             animeId: selected,
         });
         setIsOpenDelete(!isOpenDelete);
@@ -113,7 +113,7 @@ const CollectionDetail: React.FC<{}> = () => {
     return (
         <>
             <div css={style.title}>
-                <h1>{params.title}</h1>
+                <h1>{collection.title}</h1>
                 <p>Description:</p>
                 <p>{collection.description} </p>
             </div>
@@ -130,7 +130,7 @@ const CollectionDetail: React.FC<{}> = () => {
                 children={
                     <AddCollectionForm
                         onClose={handleClose}
-                        id={params.title}
+                        id={collection.id}
                     />
                 }
             />

@@ -7,13 +7,13 @@ import { CollectionData, FormValues } from "../types";
 import { schema, schemaEdit } from "../../../utils/validation";
 import {
     editCollectionMutation,
-    getCollectionByName,
+    getCollectionById,
     saveToLocalStorage,
 } from "../../../utils/constant";
 
 interface Props {
     onClose: () => void;
-    id?: string | null;
+    id?: number;
 }
 
 const AddCollectionForm: React.FC<Props> = (props) => {
@@ -29,7 +29,7 @@ const AddCollectionForm: React.FC<Props> = (props) => {
 
     const dataEdit = useMemo<CollectionData | null>(() => {
         if (!id) return null;
-        const data = getCollectionByName(id);
+        const data = getCollectionById(id);
         if (!data) return null;
         return data;
     }, [id]);
