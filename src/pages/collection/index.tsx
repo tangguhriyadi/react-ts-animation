@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
-import React, { useCallback, useState, MouseEvent } from "react";
+import React, { useCallback, useState, MouseEvent, useMemo } from "react";
 // import Sidenav from "./components/Sidenav";
 import { css } from "@emotion/react";
 import DefaultImage from "../../assets/default.png";
 import Modal from "../../components/Modal";
 import AddCollectionForm from "./components/AddCollectionForm";
 import DeleteIcon from "../../assets/delete.png";
+import EditIcon from "../../assets/pencil2.png";
 import { useNavigate } from "react-router-dom";
 import {
     deleteMutationCollectionLocal,
@@ -21,7 +22,20 @@ const Collection: React.FC<{}> = () => {
 
     const [isOpenDelete, setIsOpenDelete] = useState(false);
 
+    const [isOpenEdit, setIsOpenEdit] = useState(false);
+
     const [selected, setSelected] = useState<string | null>("");
+
+    const formTitle = useMemo<string>(() => {
+        if (isOpen && !isOpenEdit && !isOpenDelete) {
+            return "Add New Collection";
+        } else if (isOpenEdit && !isOpenDelete && !isOpen) {
+            return `Edit Collection "${selected}"`;
+        } else if (isOpenDelete && !isOpenEdit && !isOpen) {
+            return `Are you sure want to delete collection "${selected}" ?`;
+        }
+        return "";
+    }, [isOpen, isOpenEdit, isOpenDelete]);
 
     const handleOpenModal = (): void => {
         setIsOpen(true);
@@ -29,11 +43,10 @@ const Collection: React.FC<{}> = () => {
 
     const handleCloseModal = (): void => {
         setIsOpen(false);
-    };
-
-    const handleCloseDeleteModal = (): void => {
+        setIsOpenEdit(false);
         setIsOpenDelete(false);
     };
+
     const existingStorage: string | null = localStorage.getItem("collection");
 
     const dataCollection: CollectionData[] = existingStorage
@@ -53,6 +66,13 @@ const Collection: React.FC<{}> = () => {
         const id = e.currentTarget.getAttribute("data-id");
         setSelected(id);
         setIsOpenDelete(true);
+    };
+
+    const handleClickEdit = (e: MouseEvent<HTMLImageElement>): void => {
+        e.stopPropagation();
+        const id = e.currentTarget.getAttribute("data-id");
+        setSelected(id);
+        setIsOpenEdit(true);
     };
 
     const renderCollection = useCallback((): JSX.Element => {
@@ -87,6 +107,14 @@ const Collection: React.FC<{}> = () => {
                                     onClick={handleClickDelete}
                                     loading="lazy"
                                 />
+                                <img
+                                    className="edit"
+                                    src={EditIcon}
+                                    alt=""
+                                    data-id={collection.title}
+                                    onClick={handleClickEdit}
+                                    loading="lazy"
+                                />
                             </li>
                         ))}
                 </ul>
@@ -94,19 +122,23 @@ const Collection: React.FC<{}> = () => {
         );
     }, [dataCollection]);
 
-    const renderPopUpForm = (): JSX.Element => {
-        if (isOpen) {
+    const renderPopUpForm = useCallback((): JSX.Element => {
+        if (isOpen && !isOpenDelete && !isOpenEdit) {
             return <AddCollectionForm onClose={handleCloseModal} />;
-        } else if (isOpenDelete) {
+        } else if (isOpenDelete && !isOpenEdit && !isOpen) {
             return (
                 <DeleteConfirmation
-                    onClose={handleCloseDeleteModal}
+                    onClose={handleCloseModal}
                     handleDelete={handleDelete}
                 />
             );
+        } else if (isOpenEdit && !isOpenDelete && !isOpen) {
+            return (
+                <AddCollectionForm onClose={handleCloseModal} id={selected} />
+            );
         }
         return <></>;
-    };
+    }, [selected, isOpen, isOpenDelete, isOpenEdit]);
 
     return (
         <>
@@ -120,8 +152,9 @@ const Collection: React.FC<{}> = () => {
             </div>
             {dataCollection.length > 0 && renderCollection()}
             <Modal
-                title={isOpen ? "Add New Collection" : "Are you sure ?"}
-                isOpen={isOpen || isOpenDelete}
+                onClose={handleCloseModal}
+                title={formTitle}
+                isOpen={isOpen || isOpenDelete || isOpenEdit}
                 children={renderPopUpForm()}
             />
         </>
@@ -169,24 +202,43 @@ const style = {
             flex-direction: column;
             align-items: end;
             text-align: center;
+            max-height: 400px;
+            position: relative;
+            cursor: pointer;
 
             img {
                 width: 100%;
+                height: 400px;
                 max-width: 275px;
-                height: 300px;
-                object-fit: cover;
+                object-fit: fill;
                 border-radius: 8px;
                 cursor: pointer;
                 position: relative;
+                @media (max-width: 480px) {
+                    width: 275px;
+                }
             }
 
             .delete {
                 position: absolute;
                 z-index: 1;
-                margin: 5px;
+                margin: 40px 5px 5px 5px;
                 width: 30px;
                 height: 30px;
                 background-color: red;
+                border-radius: 50%;
+                transition: transform 0.3s ease-in-out;
+                &:hover {
+                    transform: scale(1.1);
+                }
+            }
+            .edit {
+                position: absolute;
+                z-index: 1;
+                margin: 5px;
+                width: 30px;
+                height: 30px;
+                background-color: #fff;
                 border-radius: 50%;
                 transition: transform 0.3s ease-in-out;
                 &:hover {
@@ -208,30 +260,10 @@ const style = {
         }
 
         @media (max-width: 480px) {
-            grid-template-columns: repeat(1, 1fr);
-        }
-    `,
-    addCollection: css`
-        .add-item {
-            width: 275px;
-            border-style: dotted;
-            height: 300px;
-            margin: 20px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
-            border-radius: 7px;
-        }
-
-        @media (max-width: 768px) {
-            display: flex;
-            justify-content: center;
-        }
-
-        @media (max-width: 480px) {
-            display: flex;
-            justify-content: center;
         }
     `,
 };

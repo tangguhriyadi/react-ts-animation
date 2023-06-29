@@ -6,15 +6,19 @@ interface ModalProps {
     isOpen: boolean;
     title: string;
     children: JSX.Element;
+    onClose?: () => void
 }
 
 const Modal: React.FC<ModalProps> = (props) => {
-    const { isOpen, children, title } = props;
+    const { isOpen, children, title, onClose } = props;
     if (!isOpen) return null;
 
     return (
         <div css={style}>
             <div className="container">
+                <div onClick={onClose} className="cancel">
+                    <p>&#10006;</p>
+                </div>
                 <h2>{title}</h2>
                 <div className="content">{children}</div>
             </div>
@@ -36,11 +40,11 @@ const style: SerializedStyles = css`
     .container {
         background-color: #fff;
         width: 400px;
-        padding: 20px;
+        padding: 10px 20px 20px 20px;;
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         h2 {
-            text-align:center;
+            text-align: center;
             margin-top: 0;
             margin-bottom: 20px;
         }
@@ -55,6 +59,15 @@ const style: SerializedStyles = css`
                 border: none;
                 cursor: pointer;
             }
+        }
+        .cancel {
+            display: flex;
+            justify-content: end;
+            p {
+                color: red;
+                font-weight: bold;
+            }
+            cursor:pointer;
         }
     }
 `;

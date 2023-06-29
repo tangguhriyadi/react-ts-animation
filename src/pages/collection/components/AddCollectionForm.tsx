@@ -1,30 +1,51 @@
 /** @jsxImportSource @emotion/react */
 import { css, SerializedStyles } from "@emotion/react";
-import React from "react";
+import React, { useMemo } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { FormValues } from "../types";
-import { schema } from "../../../utils/validation";
-import { saveToLocalStorage } from "../../../utils/constant";
+import { CollectionData, FormValues } from "../types";
+import { schema, schemaEdit } from "../../../utils/validation";
+import {
+    editCollectionMutation,
+    getCollectionByName,
+    saveToLocalStorage,
+} from "../../../utils/constant";
 
 interface Props {
     onClose: () => void;
+    id?: string | null;
 }
 
 const AddCollectionForm: React.FC<Props> = (props) => {
-    const { onClose } = props;
+    const { onClose, id } = props;
     const onSubmit: SubmitHandler<FormValues> = (data) => {
-        saveToLocalStorage(data);
+        if (id) {
+            editCollectionMutation(data, id);
+        } else {
+            saveToLocalStorage(data);
+        }
         onClose();
     };
+
+    const dataEdit = useMemo<CollectionData | null>(() => {
+        if (!id) return null;
+        const data = getCollectionByName(id);
+        if (!data) return null;
+        return data;
+    }, [id]);
 
     const {
         handleSubmit,
         register,
         formState: { errors },
     } = useForm<FormValues>({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(id ? schemaEdit : schema),
+        defaultValues: {
+            title: dataEdit ? dataEdit.title : "",
+            description: dataEdit ? dataEdit.description : "",
+        },
     });
+
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)} css={style}>

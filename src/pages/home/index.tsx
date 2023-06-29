@@ -219,7 +219,7 @@ const Home: React.FC = () => {
                                 <div className="title">
                                     {title(anime.title)}
                                 </div>
-                                <div className="overlay"></div>
+                                
                             </div>
                         </li>
                     ))}
@@ -234,6 +234,7 @@ const Home: React.FC = () => {
             <Modal
                 title="Select Collection"
                 isOpen={isOpenModal}
+                onClose={handleCloseModal}
                 children={
                     <AddToCollectionForm
                         addToCollection={addToCollection}

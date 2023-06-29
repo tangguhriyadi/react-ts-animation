@@ -73,7 +73,7 @@ export const getDataLocalStorage = () => {
     return parsedLocalStorage;
 };
 
-export const getCollectionByAnimeName = (id: number | undefined) => {
+export const getCollectionByAnimeName = (id?: number) => {
     const collection: CollectionData[] = getDataLocalStorage();
 
     const filteredData = collection.filter((item) => {
@@ -84,6 +84,12 @@ export const getCollectionByAnimeName = (id: number | undefined) => {
     });
 
     return filteredData;
+};
+
+export const getCollectionByName = (id?: string | null):CollectionData => {
+    const collection: CollectionData[] = getDataLocalStorage();
+
+    return collection.filter((item) => item.title === id)[0]
 };
 
 export const handleImageError = (
@@ -109,8 +115,27 @@ export const title = (data: any): string => {
     } else return "untitled";
 };
 
-export const stripTags = (htmlString: string | undefined) => {
-    const tempDiv = document.createElement('div')
+export const stripTags = (htmlString: string) => {
+    const tempDiv = document.createElement("div");
     tempDiv.innerHTML = htmlString;
-    return tempDiv.textContent || tempDiv.innerText || '';
-}
+    return tempDiv.textContent || tempDiv.innerText || "";
+};
+
+export const editCollectionMutation = (
+    data: CollectionData,
+    id?: string | null
+): void => {
+    const collection: CollectionData[] = getDataLocalStorage();
+    const editedData = collection.map((col) => {
+        if (col.title === id) {
+            return {
+                ...col,
+                title: data.title,
+                description: data.description,
+            };
+        }
+        return col;
+    });
+
+    localStorage.setItem("collection", JSON.stringify(editedData));
+};

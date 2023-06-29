@@ -80,26 +80,29 @@ const AnimeDetail: React.FC<{}> = () => {
                     </div>
                 </div>
                 <div className="detail">
+                    <div className="main-title">
+                        <h1>{title(data?.Media.title)}</h1>
+                    </div>
                     <div className="tag-status">
                         {data?.Media.isAdult && <AdultOnly />}
                         {data?.Media.isLicensed && <Badge />}
                     </div>
-                    <div>
+                    <div className="detail-item">
                         <b>Title</b>: {title(data?.Media.title)}{" "}
                         {`(${data?.Media.title.native})`}
                     </div>
-                    <div>
+                    <div className="detail-item">
                         <b>Type</b>: {data?.Media.type}
                     </div>
-                    <div>
+                    <div className="detail-item">
                         <b>Total Episode</b>: {data?.Media.episodes}
                     </div>
-                    <div>
+                    <div className="detail-item">
                         <b>Released</b>: {data?.Media.startDate?.year}-
                         {convertNumber(data?.Media.startDate?.month)}-
                         {convertNumber(data?.Media.startDate?.day)}
                     </div>
-                    <div>
+                    <div className="detail-item">
                         <b>Synopsis</b>:<br />{" "}
                         <p>{stripTags(data?.Media.description ?? "")}</p>
                     </div>
@@ -125,6 +128,7 @@ const AnimeDetail: React.FC<{}> = () => {
             <Modal
                 title="Select Collection"
                 isOpen={isOpenModal}
+                onClose={handleCloseModal}
                 children={
                     <AddToCollectionForm
                         addToCollection={addToCollection}
@@ -203,21 +207,33 @@ const style: SerializedStyles = css`
             }
         }
         .detail {
+            .detail-item {
+                margin-bottom:5px;
+            }
             margin-left: 10px;
             display: flex;
             flex-direction: column;
+            .main-title {
+                margin-top: -45px;
+                color: #fff;
+                z-index: 1;
+                @media (max-width: 768px) {
+                    display:none;
+                }
+            }
             .tag-status {
                 align-self: start;
                 gap: 5px;
                 display: flex;
                 flex-direction: row;
+                margin-top: 5px;
             }
             h2 {
                 text-align: center;
                 margin: 5px;
             }
             .collection-list {
-                margin-top: 20px;
+                margin-top: 10px;
                 align-self: start;
             }
             .collection-item {
@@ -253,10 +269,6 @@ const style: SerializedStyles = css`
             padding: 0 20px;
             margin: 0 20px;
         }
-    }
-    tag-status {
-        position:absolute;
-        align-self:start;
     }
 `;
 

@@ -53,12 +53,13 @@ export const homePageStyle = {
                 }
                 .year {
                     margin-top: 0;
+                    padding-bottom:5px;
                     font-weight: bold;
                     color: #fff;
                     position: relative;
                     background-color: rgba(0, 0, 0, 0.5);
-                    border-bottom-left-radius: 50%;
-                    border-bottom-right-radius: 50%;
+                    border-bottom-left-radius: 4px;
+                    border-bottom-right-radius: 4px;
                 }
                 @media (max-width: 480px) {
                     max-width: 275px;
@@ -135,7 +136,7 @@ export const homePageStyle = {
         margin-top: 10px;
         position: sticky;
         top: 0;
-        z-index: 1;
+        z-index: 2;
         padding-top: 10px;
     `,
     direction: css`
