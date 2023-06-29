@@ -184,7 +184,7 @@ const style = {
             img {
                 width: 100%;
 
-                height: 400px;
+                height: 300px;
                 object-fit: fill;
                 border-radius: 8px;
                 cursor: pointer;
@@ -210,6 +210,9 @@ const style = {
             }
             .title {
                 align-self: center;
+            }
+            @media (max-width: 480px) {
+                padding: 0 20px 0 20px;
             }
         }
 

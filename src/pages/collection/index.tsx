@@ -1,5 +1,12 @@
 /** @jsxImportSource @emotion/react */
-import React, { useCallback, useState, MouseEvent, useMemo } from "react";
+import React, {
+    useCallback,
+    useState,
+    MouseEvent,
+    useMemo,
+    useRef,
+    useEffect,
+} from "react";
 // import Sidenav from "./components/Sidenav";
 import { css } from "@emotion/react";
 import DefaultImage from "../../assets/default.png";
@@ -26,6 +33,10 @@ const Collection: React.FC<{}> = () => {
 
     const [selected, setSelected] = useState<number>(0);
 
+    const div1Ref = useRef<HTMLImageElement>(null);
+
+    const div2Ref = useRef<HTMLDivElement>(null);
+
     const formTitle = useMemo<string>(() => {
         if (isOpen && !isOpenEdit && !isOpenDelete) {
             return "Add New Collection";
@@ -36,6 +47,35 @@ const Collection: React.FC<{}> = () => {
         }
         return "";
     }, [isOpen, isOpenEdit, isOpenDelete]);
+
+    const totalCollection = (data: CollectionData) => {
+        if (data.data?.length === 0) return `(empty collection)`;
+        
+        
+        return `(${data.data?.length} Anime)`;
+    };
+
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (let entry of entries) {
+                if (entry.target === div1Ref.current) {
+                    // Mengupdate lebar div2 saat div1 berubah lebar
+                    div2Ref.current!.style.width = `${entry.contentRect.width}px`;
+                    div2Ref.current!.style.height = `${entry.contentRect.height}px`;
+                }
+            }
+        });
+
+        if (div1Ref.current) {
+            resizeObserver.observe(div1Ref.current);
+        }
+
+        return () => {
+            if (div1Ref.current) {
+                resizeObserver.unobserve(div1Ref.current);
+            }
+        };
+    }, []);
 
     const handleOpenModal = (): void => {
         setIsOpen(true);
@@ -97,8 +137,8 @@ const Collection: React.FC<{}> = () => {
                                     alt="../../assets/default.png"
                                     onError={handleImageError}
                                     loading="lazy"
+                                    ref={div1Ref}
                                 />
-                                <div className="title">{collection.title}</div>
                                 <img
                                     className="delete"
                                     src={DeleteIcon}
@@ -115,6 +155,14 @@ const Collection: React.FC<{}> = () => {
                                     onClick={handleClickEdit}
                                     loading="lazy"
                                 />
+                                <div className="title-container" ref={div2Ref}>
+                                    <div className="total">
+                                        {totalCollection(collection)}
+                                    </div>
+                                    <div className="title">
+                                        {collection.title}{" "}
+                                    </div>
+                                </div>
                             </li>
                         ))}
                 </ul>
@@ -134,10 +182,7 @@ const Collection: React.FC<{}> = () => {
             );
         } else if (isOpenEdit && !isOpenDelete && !isOpen) {
             return (
-                <AddCollectionForm
-                    onClose={handleCloseModal}
-                    id={selected}
-                />
+                <AddCollectionForm onClose={handleCloseModal} id={selected} />
             );
         }
         return <></>;
@@ -211,7 +256,7 @@ const style = {
 
             img {
                 width: 100%;
-                height: 400px;
+                height: 300px;
                 max-width: 275px;
                 object-fit: fill;
                 border-radius: 8px;
@@ -219,6 +264,34 @@ const style = {
                 position: relative;
                 @media (max-width: 480px) {
                     width: 275px;
+                }
+            }
+            .title-container {
+                position: absolute;
+                height: 300px;
+                display: flex;
+                flex-direction: column-reverse;
+                width: 100%;
+                margin: 0;
+                .title {
+                    color: #fff;
+                    font-weight: bold;
+                    margin: 0;
+                    position: relative;
+                    background-color: rgba(0, 0, 0, 0.5);
+                }
+                .total {
+                    color: #fff;
+                    margin: 0;
+                    font-weight: bold;
+                    position: relative;
+                    padding-bottom: 5px;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    border-bottom-left-radius: 4px;
+                    border-bottom-right-radius: 4px;
+                }
+                @media (max-width: 480px) {
+                    max-width: 275px;
                 }
             }
 
@@ -253,15 +326,12 @@ const style = {
                 margin-top: 10px;
                 font-weight: bold;
             }
-            .title {
-                align-self: center;
-            }
             @media (max-width: 768px) {
                 grid-template-columns: repeat(3, 1fr);
-                margin-bottom:20px;
+                margin-bottom: 20px;
             }
         }
-        
+
         @media (max-width: 768px) {
             grid-template-columns: repeat(3, 1fr);
         }
