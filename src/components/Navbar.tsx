@@ -8,7 +8,7 @@ const Navbar: React.FC<{}> = () => {
     return (
         <div css={style}>
             <h1 onClick={() => navigate("/")}>
-                Anime <span className="flix">Flix</span>
+                Anime <span className="field">Field</span>
             </h1>
             <div></div>
             <div className="collection-container">
@@ -38,7 +38,7 @@ const style: SerializedStyles = css`
         display: flex;
         align-items: center;
         cursor: pointer;
-        .flix {
+        .field {
             font-family: Inter;
             color: #79c142;
         }
