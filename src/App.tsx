@@ -7,11 +7,13 @@ import CollectionDetail from "./pages/collection_detail";
 import AnimeDetail from "./pages/detail";
 import Home from "./pages/home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { NotificationProvider } from "./hooks/useNotification";
+import ModalNotif from "./components/ModalNotif";
 
 function App() {
     return (
-        <>
-            <BrowserRouter>
+        <BrowserRouter>
+            <NotificationProvider>
                 <Navbar />
                 <div>
                     <Routes>
@@ -27,10 +29,11 @@ function App() {
                         />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
+                    <ModalNotif />
                 </div>
                 <Footer author="Muhammad Tangguh Riyadi" year={2023} />
-            </BrowserRouter>
-        </>
+            </NotificationProvider>
+        </BrowserRouter>
     );
 }
 

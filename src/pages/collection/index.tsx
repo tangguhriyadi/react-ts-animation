@@ -21,6 +21,7 @@ import {
 } from "../../utils/constant";
 import { CollectionData } from "./types";
 import DeleteConfirmation from "../../components/DeleteConfitmation";
+import { useNotification } from "../../hooks/useNotification";
 
 const Collection: React.FC<{}> = () => {
     const navigate = useNavigate();
@@ -37,6 +38,8 @@ const Collection: React.FC<{}> = () => {
 
     const div2Ref = useRef<HTMLDivElement>(null);
 
+    const { setNotification } = useNotification();
+
     const formTitle = useMemo<string>(() => {
         if (isOpen && !isOpenEdit && !isOpenDelete) {
             return "Add a Collection";
@@ -50,8 +53,7 @@ const Collection: React.FC<{}> = () => {
 
     const totalCollection = (data: CollectionData) => {
         if (data.data?.length === 0) return `(empty collection)`;
-        
-        
+
         return `(${data.data?.length} Anime)`;
     };
 
@@ -98,6 +100,13 @@ const Collection: React.FC<{}> = () => {
             data: dataCollection,
             collectionId: selected,
         });
+
+        setNotification({ message: "Success Delete!", type: "success" });
+
+        setTimeout(() => {
+            setNotification({ message: "" });
+        }, 2000);
+
         setIsOpenDelete(!isOpenDelete);
     };
 
@@ -258,12 +267,12 @@ const style = {
             .img-collection {
                 width: 100%;
                 height: 400px;
-                
+
                 object-fit: fill;
                 border-radius: 8px;
                 cursor: pointer;
                 position: relative;
-                box-shadow:-7px 7px 5px #888888;
+                box-shadow: -7px 7px 5px #888888;
                 @media (max-width: 480px) {
                     width: 275px;
                 }

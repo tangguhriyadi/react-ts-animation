@@ -4,6 +4,7 @@ import { css, SerializedStyles } from "@emotion/react";
 import { Anime } from "../types";
 import AddNewCollection from "./AddNewCollection";
 import { CollectionData } from "../../collection/types";
+import { useNotification } from "../../../hooks/useNotification";
 
 interface Props {
     onClose: () => void;
@@ -17,6 +18,8 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
 
     const [isOpenAddCollection, setIsOpenAddCollection] =
         useState<boolean>(false);
+
+    const { setNotification } = useNotification();
 
     const [isError, setIsError] = useState<boolean>(false);
 
@@ -46,6 +49,7 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
+
         if (selectedItem.length === 0) {
             setIsError(true);
             return;
@@ -83,6 +87,10 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
         if (handleSetDefaultState) {
             handleSetDefaultState();
         }
+        setNotification({ message: "Success Add !", type: "success" });
+        setTimeout(() => {
+            setNotification({ message: "" });
+        }, 2000);
         onClose();
     };
 

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
-import { css, SerializedStyles } from "@emotion/react";
+import { css, keyframes, SerializedStyles } from "@emotion/react";
 
 interface ModalProps {
     isOpen: boolean;
@@ -25,6 +25,16 @@ const Modal: React.FC<ModalProps> = (props) => {
         </div>
     );
 };
+const droptop = keyframes`
+    0%{
+        transform:translateY(-100%) scale(0);
+        opacity:0;
+    }
+    100% {
+        transform:translateY(0%) scale(1);
+        opacity:1;
+    }
+`;
 
 const style: SerializedStyles = css`
     position: fixed;
@@ -36,13 +46,14 @@ const style: SerializedStyles = css`
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 3;
+    z-index: 4;
     .container {
         background-color: #fff;
         width: 400px;
         padding: 10px 20px 20px 20px;
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        animation: ${droptop} 0.3s linear;
         h2 {
             text-align: center;
             margin-top: 0;

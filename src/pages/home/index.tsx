@@ -191,7 +191,7 @@ const Home: React.FC = () => {
                             <div className="header-status">
                                 <div className="tag-status">
                                     {anime.isAdult && <AdultOnly />}
-                                    {anime.isLicensed && <Badge />}
+                                    {anime.isLicensed && <Badge hover />}
                                 </div>
                                 <div className="tag-format">
                                     <Format format={anime.format} />
