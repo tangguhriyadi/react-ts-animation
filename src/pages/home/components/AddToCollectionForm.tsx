@@ -239,6 +239,8 @@ const style: SerializedStyles = css`
                 background-color: #ccc;
                 border-radius: 2px;
                 transition: background-color 0.2s;
+                transform:translateY(-40%);
+                margin-left:0.1rem;
             }
 
             .checkbox-label
