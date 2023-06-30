@@ -144,7 +144,10 @@ const style = {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        h1,
+        h1{
+            text-align: center;
+            margin-bottom:10px; 
+        }
         p {
             text-align: center;
         }

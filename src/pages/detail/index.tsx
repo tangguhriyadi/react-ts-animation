@@ -108,15 +108,14 @@ const AnimeDetail: React.FC<{}> = () => {
                         <b>Synopsis</b>:<br />{" "}
                         <p>{stripTags(data?.Media.description ?? "")}</p>
                     </div>
-                    <div className="collection-data">
-                        {collection.length > 0 && (
+                    {collection.length > 0 && (
+                        <div className="collection-data">
                             <div className="collection-list">
                                 {title(data?.Media.title)} has been added to
                                 your collection below:
                             </div>
-                        )}
-                        {collection.length > 0 &&
-                            collection.map((col) => (
+
+                            {collection.map((col) => (
                                 <Link
                                     className="collection-item"
                                     key={col.title}
@@ -126,7 +125,8 @@ const AnimeDetail: React.FC<{}> = () => {
                                     <span>{col.title}</span>
                                 </Link>
                             ))}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
             <Modal
