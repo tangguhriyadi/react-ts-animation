@@ -5,6 +5,7 @@ import { Anime } from "../types";
 import AddNewCollection from "./AddNewCollection";
 import { CollectionData } from "../../collection/types";
 import { useNotification } from "../../../hooks/useNotification";
+import AnimeAddedList from "./AnimeAddedList";
 
 interface Props {
     onClose: () => void;
@@ -108,7 +109,7 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
                 <div className="checkbox-container">
                     <div className="column">
                         {leftOptions.length > 0 ? (
-                            leftOptions.map((data: any) => (
+                            leftOptions.map((data: CollectionData) => (
                                 <div key={data.title}>
                                     <label className="checkbox-label">
                                         <input
@@ -133,7 +134,7 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
                     </div>
                     <div className="column">
                         {rightOptions.length > 0 ? (
-                            rightOptions.map((data: any) => (
+                            rightOptions.map((data: CollectionData) => (
                                 <div key={data.title}>
                                     <label className="checkbox-label">
                                         <input
@@ -157,6 +158,8 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
                         )}
                     </div>
                 </div>
+                <hr />
+                <AnimeAddedList data={addToCollection} />
                 <button className="button-submit" type="submit">
                     Submit
                 </button>
@@ -186,7 +189,7 @@ const AddToCollectionForm: React.FC<Props> = (props) => {
             )}
             <hr />
             {parsedLocalStorage.length > 0 ? (
-                renderCollectionList()
+                <>{renderCollectionList()}</>
             ) : (
                 <h3>You have no collection yet</h3>
             )}
@@ -202,6 +205,8 @@ const style: SerializedStyles = css`
     .checkbox-container {
         display: flex;
         justify-content: space-between;
+        max-height:150px;
+        overflow: auto;
         .column {
             width: 50%;
             .checkbox-label {
