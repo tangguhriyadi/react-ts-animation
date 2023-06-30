@@ -87,7 +87,7 @@ const AnimeDetail: React.FC<{}> = () => {
                     </div>
                     <div className="tag-status">
                         {data?.Media.isAdult && <AdultOnly />}
-                        {data?.Media.isLicensed && <Badge hover/>}
+                        {data?.Media.isLicensed && <Badge hover />}
                     </div>
                     <div className="detail-item">
                         <b>Title</b>: {title(data?.Media.title)}{" "}
@@ -108,23 +108,25 @@ const AnimeDetail: React.FC<{}> = () => {
                         <b>Synopsis</b>:<br />{" "}
                         <p>{stripTags(data?.Media.description ?? "")}</p>
                     </div>
-                    {collection.length > 0 && (
-                        <div className="collection-list">
-                            {title(data?.Media.title)} has been added to your
-                            collection below:
-                        </div>
-                    )}
-                    {collection.length > 0 &&
-                        collection.map((col) => (
-                            <Link
-                                className="collection-item"
-                                key={col.title}
-                                to={`/collection/${col.title}`}
-                            >
-                                &#8594;
-                                <span>{col.title}</span>
-                            </Link>
-                        ))}
+                    <div className="collection-data">
+                        {collection.length > 0 && (
+                            <div className="collection-list">
+                                {title(data?.Media.title)} has been added to
+                                your collection below:
+                            </div>
+                        )}
+                        {collection.length > 0 &&
+                            collection.map((col) => (
+                                <Link
+                                    className="collection-item"
+                                    key={col.title}
+                                    to={`/collection/${col.id}`}
+                                >
+                                    &#8594;
+                                    <span>{col.title}</span>
+                                </Link>
+                            ))}
+                    </div>
                 </div>
             </div>
             <Modal
@@ -209,7 +211,7 @@ const style: SerializedStyles = css`
             }
         }
         .detail {
-            margin-bottom:50px;
+            margin-bottom: 50px;
             .detail-item {
                 margin-bottom: 5px;
             }
@@ -235,18 +237,24 @@ const style: SerializedStyles = css`
                 text-align: center;
                 margin: 5px;
             }
-            .collection-list {
+            .collection-data {
                 margin-top: 10px;
-                align-self: start;
-            }
-            .collection-item {
-                margin-left: 20px;
-                text-decoration: none;
-                color: #11101d;
-                align-self: start;
-                span {
-                    margin-left: 10px;
-                    font-weight: bold;
+                border: 2px solid #11101d;
+                padding: 5px;
+                border-radius: 4px;
+                .collection-list {
+                    margin-top: 10px;
+                    align-self: start;
+                }
+                .collection-item {
+                    margin-left: 20px;
+                    text-decoration: none;
+                    color: #11101d;
+                    align-self: start;
+                    span {
+                        margin-left: 10px;
+                        font-weight: bold;
+                    }
                 }
             }
             p {
@@ -263,14 +271,14 @@ const style: SerializedStyles = css`
         }
         @media (max-width: 768px) {
             display: block !important;
-            padding: 0 40px;
-            margin: 0 40px;
+            padding: 0 20px;
+            margin: 0 20px;
         }
 
         @media (max-width: 480px) {
             display: block !important;
-            padding: 0 20px;
-            margin: 0 20px;
+            padding: 0 10px;
+            margin: 0 10px;
         }
     }
 `;
