@@ -23,7 +23,7 @@ To run this application locally, you need to have Node.js and yarn (or npm) inst
 
 ## Deployment
 
-This application is deployed on [AWS EC2](https://docs.aws.amazon.com/ec2/index.html
+This application is deployed on AWS EC2(https://docs.aws.amazon.com/ec2/index.html
 
 You can visit the deployed website at (http://tangguhriyadi-project.cloud).
 
