@@ -87,7 +87,7 @@ const AnimeDetail: React.FC<{}> = () => {
                     </div>
                     <div className="tag-status">
                         {data?.Media.isAdult && <AdultOnly />}
-                        {data?.Media.isLicensed && <Badge />}
+                        {data?.Media.isLicensed && <Badge hover/>}
                     </div>
                     <div className="detail-item">
                         <b>Title</b>: {title(data?.Media.title)}{" "}

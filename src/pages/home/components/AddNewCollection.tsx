@@ -13,10 +13,12 @@ interface Props {
 
 const AddNewCollection: React.FC<Props> = (props) => {
     const { onClose } = props;
+
     const onSubmit: SubmitHandler<FormValues> = (data) => {
         saveToLocalStorage(data);
         onClose();
     };
+    
     const {
         handleSubmit,
         register,

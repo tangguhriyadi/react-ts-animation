@@ -10,6 +10,7 @@ import {
     getCollectionById,
     saveToLocalStorage,
 } from "../../../utils/constant";
+import { useNotification } from "../../../hooks/useNotification";
 
 interface Props {
     onClose: () => void;
@@ -18,11 +19,22 @@ interface Props {
 
 const AddCollectionForm: React.FC<Props> = (props) => {
     const { onClose, id } = props;
+
+    const { setNotification } = useNotification();
+
     const onSubmit: SubmitHandler<FormValues> = (data) => {
         if (id) {
             editCollectionMutation(data, id);
+            setNotification({ message: "Success Edit !", type: "success" });
+            setTimeout(() => {
+                setNotification({ message: "" });
+            }, 2000);
         } else {
             saveToLocalStorage(data);
+            setNotification({ message: "Success Add !", type: "success" });
+            setTimeout(() => {
+                setNotification({ message: "" });
+            }, 2000);
         }
         onClose();
     };

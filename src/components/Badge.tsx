@@ -3,11 +3,16 @@ import { css, SerializedStyles } from "@emotion/react";
 import React from "react";
 import Badges from "../assets/badge.png";
 
-const Badge: React.FC = () => {
+interface Props {
+    hover: boolean;
+}
+
+const Badge: React.FC<Props> = (props) => {
+    const { hover } = props;
     return (
         <div css={style}>
             <img src={Badges} alt="" />
-            <div className="hide">Licensed</div>
+            {hover && <div className="hide">Licensed</div>}
         </div>
     );
 };
