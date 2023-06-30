@@ -23,9 +23,9 @@ To run this application locally, you need to have Node.js and yarn (or npm) inst
 
 ## Deployment
 
-This application is deployed on my own VPS.
+This application is deployed on [AWS EC2](https://docs.aws.amazon.com/ec2/index.html
 
-You can visit the deployed website at [http://tangguhriyadi-project.cloud).
+You can visit the deployed website at (http://tangguhriyadi-project.cloud).
 
 ## Technologies used
 
@@ -37,3 +37,5 @@ You can visit the deployed website at [http://tangguhriyadi-project.cloud).
 - [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
 - [Vite](https://vitejs.dev/)
 - [Github Action](https://docs.github.com/en/actions/)
+- [Docker](https://www.docker.com/)
+- [AWS EC2](https://docs.aws.amazon.com/ec2/index.html)
