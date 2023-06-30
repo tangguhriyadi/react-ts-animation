@@ -36,3 +36,4 @@ You can visit the deployed website at [http://tangguhriyadi-project.cloud).
 - [Emotion](https://emotion.sh/docs/introduction)
 - [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
 - [Vite](https://vitejs.dev/)
+- [Github Action](https://docs.github.com/en/actions/)
