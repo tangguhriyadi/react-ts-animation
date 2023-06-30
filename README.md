@@ -25,7 +25,7 @@ To run this application locally, you need to have Node.js and yarn (or npm) inst
 
 This application is deployed on my own VPS.
 
-You can visit the deployed website at [https://tangguhriyadi-project.cloud/).
+You can visit the deployed website at [http://tangguhriyadi-project.cloud).
 
 ## Technologies used
 
