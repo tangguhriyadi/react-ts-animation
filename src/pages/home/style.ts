@@ -19,7 +19,7 @@ export const homePageStyle = {
             .checkbox {
                 position: absolute;
                 z-index: 1;
-                margin-top: 70px;
+                margin-top: 100px;
                 img {
                     width:150px;
                 }
