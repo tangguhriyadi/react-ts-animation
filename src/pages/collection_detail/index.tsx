@@ -15,6 +15,7 @@ import {
 } from "../../utils/constant";
 import DeleteConfirmation from "../../components/DeleteConfitmation";
 import AddCollectionForm from "../collection/components/AddCollectionForm";
+import { useNotification } from "../../hooks/useNotification";
 
 const CollectionDetail: React.FC<{}> = () => {
     const params = useParams<{ id: string }>();
@@ -24,6 +25,8 @@ const CollectionDetail: React.FC<{}> = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const [isOpenDelete, setIsOpenDelete] = useState<boolean>(false);
+
+    const { setNotification } = useNotification();
 
     const [selected, setSelected] = useState<number>(0);
 
@@ -61,6 +64,12 @@ const CollectionDetail: React.FC<{}> = () => {
             collectionId: collection.id,
             animeId: selected,
         });
+
+        setNotification({ message: "Success Delete !", type: "success" });
+        setTimeout(() => {
+            setNotification({ message: "" });
+        }, 2000);
+
         setIsOpenDelete(!isOpenDelete);
     };
 
@@ -144,9 +153,9 @@ const style = {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        h1{
+        h1 {
             text-align: center;
-            margin-bottom:10px; 
+            margin-bottom: 10px;
         }
         p {
             text-align: center;
@@ -184,7 +193,6 @@ const style = {
             flex-direction: column;
             align-items: end;
             text-align: center;
-            
 
             .anime-collection {
                 width: 100%;
@@ -203,7 +211,7 @@ const style = {
                 background-color: red;
                 border-radius: 50%;
                 transition: transform 0.3s ease-in-out;
-                cursor:pointer;
+                cursor: pointer;
                 &:hover {
                     transform: scale(1.1);
                 }
